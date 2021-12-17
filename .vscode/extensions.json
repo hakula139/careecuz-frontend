@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "andrewmcodes.tailwindcss-extension-pack",
+    "ant-design-vue.vscode-ant-design-vue-helper",
+    "dbaeumer.vscode-eslint",
+    "johnsoncodehk.volar",
+    "rvest.vs-code-prettier-eslint"
+  ]
+}

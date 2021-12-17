@@ -1,0 +1,13 @@
+## Customized
+
+.DS_Store
+*.log
+.eslintcache
+
+
+## Vite
+
+node_modules
+dist
+dist-ssr
+*.local
