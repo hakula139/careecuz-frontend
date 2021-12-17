@@ -3,16 +3,7 @@
 // Read more: https://github.com/vuejs/vue-next/pull/3399
 
 declare module 'vue' {
-  export interface GlobalComponents {
-    AButton: typeof import('ant-design-vue/es')['Button'];
-    ACard: typeof import('ant-design-vue/es')['Card'];
-    AInputNumber: typeof import('ant-design-vue/es')['InputNumber'];
-    ArithProblemListItem: typeof import('./src/components/ArithProblemListItem.vue')['default'];
-    ArithProblemsCard: typeof import('./src/components/ArithProblemsCard.vue')['default'];
-    ASpace: typeof import('ant-design-vue/es')['Space'];
-    ClockCircleOutlined: typeof import('@ant-design/icons-vue')['ClockCircleOutlined'];
-    TimeCounter: typeof import('./src/components/TimeCounter.vue')['default'];
-  }
+  export interface GlobalComponents {}
 }
 
 export {};

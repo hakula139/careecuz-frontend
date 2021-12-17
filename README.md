@@ -1,40 +1,18 @@
-# Vue 3 + TypeScript + Vite
+# CareeCuz Frontend
 
-A template for Vue 3 + TypeScript apps, built with Vite.
+一个匿名的校招求职交流平台。前端基于 Vue 3，使用 TypeScript 编写。
 
-Here's a [Demo](https://vue-ts-app-template.vercel.app), deployed on [Vercel](https://vercel.com).
+## 目录
 
-## Table of Contents
+- [CareeCuz Frontend](#careecuz-frontend)
+  - [目录](#目录)
+  - [贡献者](#贡献者)
+  - [许可协议](#许可协议)
 
-- [Vue 3 + TypeScript + Vite](#vue-3--typescript--vite)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Development](#development)
-    - [Usage](#usage)
-  - [Contributors](#contributors)
-  - [License](#license)
+## 贡献者
 
-## Getting Started
+- [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - 复旦大学
 
-### Installation
+## 许可协议
 
-Execute `./scripts/prebuild.sh` to install all prerequisites, and execute `./scripts/build.sh` to build the project in production mode.
-
-### Development
-
-Execute `yarn dev` to start a development server. Modifying your code will automatically trigger rebuild and hot reload in your page.
-
-### Usage
-
-Execute `./scripts/start.sh` to start the server. The website will be hosted on `localhost:7000` by default.
-
-Execute `./scripts/stop.sh` to stop the server.
-
-## Contributors
-
-- [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
-
-## License
-
-This repository is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+本项目遵循 GNU General Public License v3.0 许可协议，详情参见 [LICENSE](./LICENSE) 文件。
