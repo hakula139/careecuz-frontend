@@ -28,9 +28,14 @@
       :pagination="false"
       :custom-row="customRow"
     >
-      <template #bodyCell="{ column, text }">
+      <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex == 'name'">
-          <span class="text-lg">{{ text }}</span>
+          <span class="text-lg">
+            <up-square-outlined
+              v-if="record.isTop"
+              class="text-red-500"
+            />
+            {{ text }}</span>
         </template>
         <template v-else-if="column.dataIndex === 'replyCount'">
           <span
@@ -88,13 +93,19 @@ const channels = reactive({
   data: [] as Channel[],
 });
 
+const compareChannels = (a: Channel, b: Channel): number => {
+  if (a.isTop && !b.isTop) return -1;
+  if (!a.isTop && b.isTop) return 1;
+  return b.lastReplyTime.localeCompare(a.lastReplyTime);
+};
+
 const getChannels = (): void => {
   channels.loading = true;
   channelClient
     .getChannels()
     .then((resp) => {
       console.log('channels:', resp.data);
-      channels.data = resp.data;
+      channels.data = resp.data.sort(compareChannels);
     })
     .catch((err: AxiosError) => {
       console.log('failed to get channels:', err.message);
