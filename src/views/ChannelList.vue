@@ -23,7 +23,7 @@
       :columns="channels.columns"
       :data-source="channels.data"
       row-key="id"
-      :scroll="{ x: 375 }"
+      :scroll="{ x: 320 }"
       :show-header="false"
       :pagination="false"
       :custom-row="customRow"
@@ -71,12 +71,14 @@ const columns = [
     dataIndex: 'replyCount',
     align: 'right',
     width: 90,
+    ellipsis: true,
   },
   {
     title: '最后回复',
     dataIndex: 'lastReplyTime',
     align: 'right',
-    width: 125,
+    width: 110,
+    ellipsis: true,
   },
 ];
 
