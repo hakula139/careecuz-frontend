@@ -1,8 +1,8 @@
 <template>
-  <div class="container px-10">
+  <div class="container px-0 md:px-4">
     <a-space
-      class="py-6"
-      size="large"
+      class="px-4 py-6 md:px-0"
+      size="middle"
     >
       <a-button
         type="primary"
@@ -23,15 +23,26 @@
       :columns="channels.columns"
       :data-source="channels.data"
       row-key="id"
+      :scroll="{ x: 375 }"
       :show-header="false"
       :pagination="false"
       :custom-row="customRow"
     >
       <template #bodyCell="{ column, text }">
-        <template v-if="['name'].includes(column.dataIndex)">
-          <span class="text-lg">
+        <template v-if="column.dataIndex == 'name'">
+          <span class="text-lg">{{ text }}</span>
+        </template>
+        <template v-else-if="column.dataIndex === 'replyCount'">
+          <span
+            v-show="text > 0"
+            class="text-purple-500"
+          >
+            <message-outlined />
             {{ text }}
           </span>
+        </template>
+        <template v-else-if="column.dataIndex === 'lastReplyTime'">
+          <span>{{ getRelativeTime(text) }}</span>
         </template>
       </template>
     </a-table>
@@ -45,7 +56,7 @@ import { AxiosError } from 'axios';
 
 import { Channel } from '@/types/channel';
 import { channelClient } from '@/api';
-import { openMessage } from '@/composables';
+import { getRelativeTime, openMessage } from '@/composables';
 
 const router = useRouter();
 
@@ -53,6 +64,19 @@ const columns = [
   {
     title: '名称',
     dataIndex: 'name',
+    ellipsis: true,
+  },
+  {
+    title: '回复数',
+    dataIndex: 'replyCount',
+    align: 'right',
+    width: 90,
+  },
+  {
+    title: '最后回复',
+    dataIndex: 'lastReplyTime',
+    align: 'right',
+    width: 125,
   },
 ];
 
@@ -67,6 +91,7 @@ const getChannels = (): void => {
   channelClient
     .getChannels()
     .then((resp) => {
+      console.log('channels:', resp.data);
       channels.data = resp.data;
     })
     .catch((err: AxiosError) => {

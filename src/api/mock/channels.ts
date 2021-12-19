@@ -6,6 +6,9 @@ import { mockStatusTemplate } from './status';
 export const mockChannelTemplate = {
   id: '@increment',
   name: '@ctitle',
+  replyCount: '@integer(0, 999)',
+  lastReplyTime: '@datetime',
+  isTop: '@boolean',
 };
 
 export const mockGetChannelsResp: GetChannelsResp = mock({
