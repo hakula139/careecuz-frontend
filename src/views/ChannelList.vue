@@ -1,21 +1,41 @@
 <template>
-  <a-table
-    :loading="channels.loading"
-    :columns="channels.columns"
-    :data-source="channels.data"
-    row-key="id"
-    :show-header="false"
-    :pagination="false"
-    :custom-row="customRow"
-  >
-    <template #bodyCell="{ column, text }">
-      <template v-if="['name'].includes(column.dataIndex)">
-        <span class="text-lg">
-          {{ text }}
-        </span>
+  <div class="container px-10">
+    <a-space
+      class="py-6"
+      size="large"
+    >
+      <a-button
+        type="primary"
+        size="large"
+      >
+        创建频道
+      </a-button>
+      <a-button
+        size="large"
+        @click="reload"
+      >
+        刷新
+      </a-button>
+    </a-space>
+
+    <a-table
+      :loading="channels.loading"
+      :columns="channels.columns"
+      :data-source="channels.data"
+      row-key="id"
+      :show-header="false"
+      :pagination="false"
+      :custom-row="customRow"
+    >
+      <template #bodyCell="{ column, text }">
+        <template v-if="['name'].includes(column.dataIndex)">
+          <span class="text-lg">
+            {{ text }}
+          </span>
+        </template>
       </template>
-    </template>
-  </a-table>
+    </a-table>
+  </div>
 </template>
 
 <script setup lang="ts">
