@@ -11,7 +11,7 @@
       <a-layout-footer class="px-2 text-center text-gray-500">
         &copy; {{ meta.currentYear }} {{ meta.title }}
         | Made with
-        <span class="text-red-600">&hearts;</span>
+        <heart-filled class="text-red-500" />
         by {{ meta.author }}
       </a-layout-footer>
     </a-layout-content>
