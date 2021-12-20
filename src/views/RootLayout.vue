@@ -1,8 +1,5 @@
 <template>
-  <a-layout
-    id="app"
-    class="w-full h-screen overflow-y-auto"
-  >
+  <a-layout class="w-full h-screen overflow-y-auto">
     <a-layout-header class="sticky top-0 z-50 flex items-center justify-center">
       <span class="text-2xl text-white">{{ meta.title }}</span>
     </a-layout-header>

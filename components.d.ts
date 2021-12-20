@@ -3,7 +3,20 @@
 // Read more: https://github.com/vuejs/vue-next/pull/3399
 
 declare module 'vue' {
-  export interface GlobalComponents {}
+  export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ADrawer: typeof import('ant-design-vue/es')['Drawer']
+    ALayout: typeof import('ant-design-vue/es')['Layout']
+    ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent']
+    ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter']
+    ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader']
+    ASpace: typeof import('ant-design-vue/es')['Space']
+    ATable: typeof import('ant-design-vue/es')['Table']
+    ChannelDrawer: typeof import('./src/components/ChannelDrawer.vue')['default']
+    HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled']
+    MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined']
+    UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined']
+  }
 }
 
-export {};
+export { }

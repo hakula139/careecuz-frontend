@@ -16,6 +16,7 @@ export default defineConfig({
     tsconfigPaths({ loose: true }),
     vue(),
     Components({
+      dts: true,
       resolvers: [
         AntDesignVueResolver({
           resolveIcons: true,
