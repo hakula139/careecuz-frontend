@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Override base SVG style to avoid clashes with Ant Design */
+svg {
+  vertical-align: initial;
+}

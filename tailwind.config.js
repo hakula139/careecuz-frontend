@@ -3,12 +3,10 @@ module.exports = {
     './index.html', //
     './src/**/*.{js,jsx,ts,tsx,vue}',
   ],
-  darkMode: 'media',
+  important: '#app',
   theme: {
-    extend: {},
+    container: {
+      center: true,
+    },
   },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
 };
