@@ -1,2 +1,2 @@
 export * from './channels';
-export * from './status';
+export * from './response';

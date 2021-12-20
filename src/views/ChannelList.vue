@@ -4,12 +4,7 @@
       class="px-4 py-6 md:px-0"
       size="middle"
     >
-      <a-button
-        type="primary"
-        size="large"
-      >
-        创建频道
-      </a-button>
+      <channel-add-button />
       <a-button
         size="large"
         @click="reload"
@@ -20,7 +15,7 @@
 
     <a-table
       :loading="channels.loading"
-      :columns="channels.columns"
+      :columns="columns"
       :data-source="channels.data"
       row-key="id"
       :scroll="{ x: 320 }"
@@ -57,15 +52,21 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { AxiosError } from 'axios';
+import { Socket } from 'socket.io-client';
+import { ColumnsType } from 'ant-design-vue/es/table';
 
+import { TIMEOUT } from '@/configs';
 import { Channel } from '@/types/channel';
-import { channelClient } from '@/api';
-import { getRelativeTime, openMessage } from '@/composables';
+import { getRelativeTime, inject, openMessage } from '@/composables';
+import { GetChannelsResp } from '@/types';
+import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
+const socket = inject<Socket>('socket');
 
-const columns = [
+// #region channel table
+
+const columns: ColumnsType = [
   {
     title: '名称',
     dataIndex: 'name',
@@ -89,7 +90,6 @@ const columns = [
 
 const channels = reactive({
   loading: true,
-  columns,
   data: [] as Channel[],
 });
 
@@ -99,21 +99,27 @@ const compareChannels = (a: Channel, b: Channel): number => {
   return b.lastReplyTime.localeCompare(a.lastReplyTime);
 };
 
+const onGetChannelsResp = (resp: GetChannelsResp): void => {
+  channels.loading = false;
+  if (resp.code === 200) {
+    console.log('channels:', resp.data);
+    channels.data = resp.data.sort(compareChannels);
+  } else {
+    console.log('failed to get channels:', resp.message);
+    openMessage('error', '加载失败');
+  }
+};
+
+socket.on('getChannelsResp', onGetChannelsResp);
+
 const getChannels = (): void => {
   channels.loading = true;
-  channelClient
-    .getChannels()
-    .then((resp) => {
-      console.log('channels:', resp.data);
-      channels.data = resp.data.sort(compareChannels);
-    })
-    .catch((err: AxiosError) => {
-      console.log('failed to get channels:', err.message);
-      openMessage('error', '加载失败');
-    })
-    .finally(() => {
-      channels.loading = false;
-    });
+  socket.timeout(TIMEOUT).emit('getChannelsReq', (err: Error): void => {
+    channels.loading = false;
+    if (err) openMessage('error', '请求超时');
+    // FIXME: remove mock data
+    onGetChannelsResp(mockGetChannelsResp);
+  });
 };
 
 const customRow = (record: Channel) => ({
@@ -124,6 +130,8 @@ const customRow = (record: Channel) => ({
     });
   },
 });
+
+// #endregion
 
 const reload = (): void => {
   getChannels();

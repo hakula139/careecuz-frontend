@@ -1,7 +1,7 @@
 import { mock } from 'mockjs';
 
-import { GetChannelsResp } from '@/types';
-import { mockStatusTemplate } from './status';
+import { AddChannelResp, GetChannelsResp } from '@/types';
+import { mockRespTemplate } from './response';
 
 export const mockChannelTemplate = {
   'id': '@increment',
@@ -21,6 +21,11 @@ export const mockChannelTemplate = {
 };
 
 export const mockGetChannelsResp: GetChannelsResp = mock({
-  ...mockStatusTemplate,
+  ...mockRespTemplate,
   'data|0-50': [mockChannelTemplate],
+});
+
+export const mockAddChannelResp: AddChannelResp = mock({
+  ...mockRespTemplate,
+  id: '@integer(1, 1000)',
 });
