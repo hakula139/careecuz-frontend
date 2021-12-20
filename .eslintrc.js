@@ -52,6 +52,7 @@ module.exports = {
     'max-len': [1, { code: 120 }],
     'no-console': 'off',
     'no-debugger': 'off',
+    'no-param-reassign': 'off',
     'no-shadow': 'off',
     'no-spaced-func': 'off',
     'no-unused-vars': 'off',
