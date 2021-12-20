@@ -13,6 +13,7 @@ declare module 'vue' {
     ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent'];
     ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter'];
     ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader'];
+    APageHeader: typeof import('ant-design-vue/es')['PageHeader'];
     ASpace: typeof import('ant-design-vue/es')['Space'];
     ATable: typeof import('ant-design-vue/es')['Table'];
     ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];

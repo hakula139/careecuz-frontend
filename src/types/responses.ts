@@ -1,4 +1,4 @@
-import { Channel } from './channel';
+import { ChannelListItem } from './channel';
 
 export interface Resp {
   code: number;
@@ -6,7 +6,7 @@ export interface Resp {
 }
 
 export interface GetChannelsResp extends Resp {
-  data: Channel[];
+  data: ChannelListItem[];
 }
 
 export interface AddChannelResp extends Resp {
