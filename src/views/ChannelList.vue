@@ -52,6 +52,8 @@
 </template>
 
 <script setup lang="ts">
+// #region imports
+
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
@@ -64,6 +66,8 @@ import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
 const socket = inject<Socket>('socket');
+
+// #endregion
 
 // #region channel table
 

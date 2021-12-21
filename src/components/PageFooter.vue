@@ -8,9 +8,13 @@
 </template>
 
 <script setup lang="ts">
+// #region imports
+
 import { computed } from 'vue';
 
 import { META_INFO } from '@/configs';
+
+// #endregion
 
 const currentYear = computed(() => new Date().getFullYear());
 </script>

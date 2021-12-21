@@ -10,5 +10,9 @@
 </template>
 
 <script setup lang="ts">
+// #region imports
+
 import { META_INFO } from '@/configs';
+
+// #endregion
 </script>
