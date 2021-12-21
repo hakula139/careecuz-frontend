@@ -6,5 +6,6 @@ export interface Message {
   content: string;
   time: string;
   replyTo: number;
-  lastReplyTime: string;
+  replies: Message[];
+  lastReplyTime?: string;
 }

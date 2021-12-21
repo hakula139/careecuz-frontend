@@ -56,9 +56,8 @@ import { Socket } from 'socket.io-client';
 import { ColumnsType } from 'ant-design-vue/es/table';
 
 import { TIMEOUT } from '@/configs';
-import { ChannelListItem } from '@/types/channel';
 import { getRelativeTime, inject, openMessage } from '@/composables';
-import { GetChannelsResp } from '@/types';
+import { ChannelListItem, GetChannelsResp } from '@/types';
 import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
