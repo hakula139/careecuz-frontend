@@ -47,6 +47,8 @@
       </template>
     </a-table>
   </div>
+
+  <page-footer />
 </template>
 
 <script setup lang="ts">
