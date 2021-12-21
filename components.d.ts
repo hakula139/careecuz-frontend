@@ -4,8 +4,10 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AAffix: typeof import('ant-design-vue/es')['Affix'];
     AAnchor: typeof import('ant-design-vue/es')['Anchor'];
     AAvatar: typeof import('ant-design-vue/es')['Avatar'];
+    ABackTop: typeof import('ant-design-vue/es')['BackTop'];
     AButton: typeof import('ant-design-vue/es')['Button'];
     ACard: typeof import('ant-design-vue/es')['Card'];
     AComment: typeof import('ant-design-vue/es')['Comment'];
@@ -23,6 +25,7 @@ declare module 'vue' {
     ASpace: typeof import('ant-design-vue/es')['Space'];
     ATable: typeof import('ant-design-vue/es')['Table'];
     ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
+    CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
     ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];
     HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];

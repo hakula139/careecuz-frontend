@@ -1,17 +1,18 @@
 <template>
   <a-page-header
     :title="channelPage.info.name"
-    :ghost="false"
     @back="router.go(-1)"
   />
-  <a-card class="overflow-y-auto content-container">
+  <div class="content-container">
+    <div ref="contentTopRef" />
     <a-list
+      ref="contentRef"
       item-layout="horizontal"
       :data-source="channelPage.messages"
     >
       <template #renderItem="{ item }">
         <a-list-item>
-          <a-comment>
+          <a-comment class="p-3 bg-white rounded-2xl">
             <template #actions>
               <a-space>
                 <a-button size="small">
@@ -42,11 +43,31 @@
         </a-list-item>
       </template>
     </a-list>
-  </a-card>
+    <div ref="contentBottomRef" />
+  </div>
+
+  <a-affix
+    class="fixed right-8"
+    :offset-bottom="60"
+  >
+    <a-button
+      shape="circle"
+      size="large"
+      @click="scrollToBottom"
+    >
+      <template #icon>
+        <caret-down-outlined />
+      </template>
+    </a-button>
+  </a-affix>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue';
+// #region imports
+
+import {
+  computed, onMounted, onUnmounted, reactive, ref,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
@@ -68,6 +89,8 @@ import { mockGetChannelResp, mockGetHistoryMessagesResp } from '@/api/mock';
 const route = useRoute();
 const router = useRouter();
 const socket = inject<Socket>('socket');
+
+// #endregion
 
 // #region channel page
 
@@ -144,9 +167,31 @@ socket.on('pushNewMessage', onPushNewMessage);
 
 // #endregion
 
+// #region scroll to bottom
+
+const contentTopRef = ref<HTMLDivElement>();
+const contentBottomRef = ref<HTMLDivElement>();
+
+const scrollToBottom = (): void => {
+  contentBottomRef.value?.scrollIntoView();
+};
+
+const scrollHandler = (_e: Event): void => {
+  // TODO: Do something.
+};
+
+// #endregion
+
+onMounted((): void => {
+  window.addEventListener('scroll', scrollHandler);
+});
+
+onUnmounted((): void => {
+  window.removeEventListener('scroll', scrollHandler);
+});
+
 const reload = (): void => {
   getChannel();
-  getHistoryMessages();
 };
 
 reload();
@@ -155,6 +200,7 @@ reload();
 <style scoped>
 @layer components {
   .content-container {
+    @apply p-3 pt-0 overflow-y-auto;
     height: calc(100% - 72px);
   }
 }

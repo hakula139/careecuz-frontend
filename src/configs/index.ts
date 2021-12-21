@@ -4,5 +4,5 @@ export const META_INFO = {
   AUTHOR: 'Hakula',
 };
 export const AVATAR_SIZE = 100;
-export const MAX_MESSAGE_COUNT = 50;
-export const TIMEOUT = 3000;
+export const MAX_MESSAGE_COUNT = 20;
+export const TIMEOUT = 2000;

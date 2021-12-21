@@ -20,5 +20,5 @@ export const mockPushNewMessage: PushNewMessage = mock({
 
 export const mockGetHistoryMessagesResp: GetHistoryMessagesResp = mock({
   ...mockRespTemplate,
-  'data|50': [mockMessageTemplate],
+  'data|20': [mockMessageTemplate],
 });
