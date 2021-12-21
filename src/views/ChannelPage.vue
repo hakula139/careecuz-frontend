@@ -1,8 +1,10 @@
 <template>
   <a-page-header
     :title="channelPage.info.name"
+    :ghost="false"
     @back="router.go(-1)"
-  >
+  />
+  <a-card class="overflow-y-auto content-container">
     <a-list
       item-layout="horizontal"
       :data-source="channelPage.messages"
@@ -24,8 +26,8 @@
               <span>{{ getUsername(item.user.userId) }}</span>
             </template>
             <template #avatar>
-              <a-avatar :size="50">
-                {{ item.user.userId[0] }}
+              <a-avatar size="large">
+                {{ getUsername(item.user.userId)[0] }}
               </a-avatar>
             </template>
             <template #content>
@@ -40,7 +42,7 @@
         </a-list-item>
       </template>
     </a-list>
-  </a-page-header>
+  </a-card>
 </template>
 
 <script setup lang="ts">
@@ -149,3 +151,11 @@ const reload = (): void => {
 
 reload();
 </script>
+
+<style scoped>
+@layer components {
+  .content-container {
+    height: calc(100% - 72px);
+  }
+}
+</style>
