@@ -49,14 +49,14 @@
           ref="containerHeaderRef"
           class="flex justify-center"
         >
-          <a-button @click="getHistoryMessages">
+          <a-button
+            v-show="channelPage.messages.length > 0"
+            :loading="channelPage.loading"
+            @click="getHistoryMessages"
+          >
             加载更多
           </a-button>
         </div>
-      </template>
-
-      <template #footer>
-        <div ref="containerFooterRef" />
       </template>
     </a-list>
   </div>
@@ -68,7 +68,7 @@
     <a-button
       shape="circle"
       size="large"
-      @click="scrollToBottom"
+      @click="scrollToPosition(0)"
     >
       <template #icon>
         <caret-down-outlined />
@@ -81,7 +81,7 @@
 // #region imports
 
 import {
-  computed, onUnmounted, reactive, ref,
+  computed, nextTick, onUnmounted, reactive, ref,
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
@@ -107,18 +107,25 @@ const socket = inject<Socket>('socket');
 
 // #endregion
 
-// #region scroll to bottom
+// #region scroll
 
 const containerRef = ref<HTMLDivElement>();
-const containerFooterRef = ref<HTMLDivElement>();
 
-const isAtBottom = (): boolean => {
+const getPosition = (): number => {
   const el = containerRef.value;
-  return el !== undefined && el.scrollTop >= el.scrollHeight - el.clientHeight;
+  return el ? el.scrollHeight - el.scrollTop - el.clientHeight : 0;
 };
 
-const scrollToBottom = (): void => {
-  containerFooterRef.value?.scrollIntoView({ behavior: 'smooth' });
+const isAtBottom = (): boolean => getPosition() <= 0;
+
+const scrollToPosition = (position: number, smooth: boolean = true): void => {
+  const el = containerRef.value;
+  if (el) {
+    el.scrollTo({
+      top: el.scrollHeight - el.clientHeight - position,
+      behavior: smooth ? 'smooth' : 'auto',
+    });
+  }
 };
 
 // #endregion
@@ -126,6 +133,7 @@ const scrollToBottom = (): void => {
 // #region channel page
 
 const channelPage = reactive({
+  loading: true,
   id: computed(() => parseInt(route.params.id as string, 10)),
   info: {
     name: '加载中...',
@@ -165,9 +173,14 @@ const getChannel = (): void => {
 // #region messages
 
 const onGetHistoryMessagesResp = (resp: GetHistoryMessagesResp): void => {
+  channelPage.loading = false;
   if (resp.code === 200) {
     console.log('history messages:', resp.data);
+    const prevPosition = getPosition();
     channelPage.messages.unshift(...resp.data);
+    nextTick((): void => {
+      scrollToPosition(prevPosition, !prevPosition);
+    });
   }
 };
 
@@ -176,6 +189,7 @@ socket.on('getHistoryMessagesResp', onGetHistoryMessagesResp);
 const getLastMessageId = (): number => (channelPage.messages.length ? channelPage.messages[0].id : 0);
 
 const getHistoryMessages = (): void => {
+  channelPage.loading = true;
   socket.timeout(TIMEOUT).emit(
     'getHistoryMessagesReq',
     {
@@ -184,6 +198,7 @@ const getHistoryMessages = (): void => {
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,
     (_err: Error): void => {
+      channelPage.loading = false;
       // FIXME: remove mock data
       onGetHistoryMessagesResp(getMockGetHistoryMessagesResp());
     },
@@ -194,9 +209,11 @@ const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
   const prevIsAtBottom = isAtBottom();
   channelPage.messages.push(resp.data);
-  setTimeout((): void => {
-    if (prevIsAtBottom) scrollToBottom();
-  }, 50);
+  nextTick((): void => {
+    if (prevIsAtBottom) {
+      scrollToPosition(0);
+    }
+  });
 };
 
 socket.on('pushNewMessage', onPushNewMessage);
