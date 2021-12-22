@@ -10,6 +10,7 @@
   <a-drawer
     placement="bottom"
     :visible="channelDrawer.visible"
+    :body-style="{ padding: 0 }"
     size="large"
     @close="closeChannelDrawer"
   >
@@ -143,10 +144,6 @@ const onAddChannelClick = (): void => {
 
 <style>
 @layer components {
-  .ant-drawer .ant-drawer-body {
-    @apply p-0;
-  }
-
   .form-entry {
     input {
       @apply h-14 text-2xl;

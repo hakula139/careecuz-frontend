@@ -7,6 +7,7 @@ declare module 'vue' {
     AAffix: typeof import('ant-design-vue/es')['Affix'];
     AAvatar: typeof import('ant-design-vue/es')['Avatar'];
     AButton: typeof import('ant-design-vue/es')['Button'];
+    ACard: typeof import('ant-design-vue/es')['Card'];
     AComment: typeof import('ant-design-vue/es')['Comment'];
     ADrawer: typeof import('ant-design-vue/es')['Drawer'];
     AForm: typeof import('ant-design-vue/es')['Form'];
@@ -19,14 +20,17 @@ declare module 'vue' {
     AList: typeof import('ant-design-vue/es')['List'];
     AListItem: typeof import('ant-design-vue/es')['ListItem'];
     APageHeader: typeof import('ant-design-vue/es')['PageHeader'];
+    ASkeleton: typeof import('ant-design-vue/es')['Skeleton'];
     ASpace: typeof import('ant-design-vue/es')['Space'];
     ATable: typeof import('ant-design-vue/es')['Table'];
     ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
     ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];
     HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled'];
+    MessageItem: typeof import('./src/components/MessageItem.vue')['default'];
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
+    MessageReplyListItem: typeof import('./src/components/MessageReplyListItem.vue')['default'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
   }

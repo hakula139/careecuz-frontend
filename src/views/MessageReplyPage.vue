@@ -5,15 +5,30 @@
     size="large"
     @close="closeReplyDrawer"
   >
-    <a-list
-      item-layout="horizontal"
+    <a-skeleton
       :loading="replyDrawer.loading"
-      :data-source="replyDrawer.data.replies"
+      avatar
+      active
+      :paragraph="{ rows: 4 }"
     >
-      <template #renderItem="{ _item }">
-        <div />
-      </template>
-    </a-list>
+      <message-item :data="replyDrawer.data" />
+
+      <a-card
+        :title="`${replyDrawer.data.replies.length} 个回复`"
+        :head-style="{ padding: 0 }"
+        :body-style="{ padding: '16px 0' }"
+        :bordered="false"
+      >
+        <a-list
+          item-layout="horizontal"
+          :data-source="replyDrawer.data.replies"
+        >
+          <template #renderItem="{ item }">
+            <message-reply-list-item :data="item" />
+          </template>
+        </a-list>
+      </a-card>
+    </a-skeleton>
   </a-drawer>
 </template>
 
@@ -29,7 +44,8 @@ import { inject, openMessage } from '@/composables';
 import {
   GetMessageReq, GetMessageResp, Message, User,
 } from '@/types';
-import { getMockGetMessageResp } from '@/api/mock';
+import { getMockGetHistoryMessagesResp, getMockGetMessageResp } from '@/api/mock';
+import MessageReplyListItem from '@/components/MessageReplyListItem.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -98,7 +114,7 @@ const getMessage = (): void => {
       if (err) openMessage('error', '请求超时');
       // FIXME: remove mock data
       onGetMessageResp(getMockGetMessageResp());
-      replyDrawer.data.replies.push(getMockGetMessageResp().data);
+      replyDrawer.data.replies.push(...getMockGetHistoryMessagesResp().data);
     },
   );
 };
@@ -112,3 +128,11 @@ const reload = (): void => {
 
 reload();
 </script>
+
+<style scoped>
+@layer components {
+  .ant-skeleton {
+    @apply py-4;
+  }
+}
+</style>
