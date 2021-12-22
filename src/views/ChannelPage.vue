@@ -12,10 +12,12 @@
       :data-source="channelPage.messages"
     >
       <template #renderItem="{ item }">
-        <message-list-item
-          :channel-id="channelId"
-          :data="item"
-        />
+        <a-list-item>
+          <message-list-item
+            :channel-id="channelId"
+            :data="item"
+          />
+        </a-list-item>
       </template>
 
       <template #header>
