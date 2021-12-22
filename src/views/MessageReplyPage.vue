@@ -98,6 +98,7 @@ const getMessage = (): void => {
       if (err) openMessage('error', '请求超时');
       // FIXME: remove mock data
       onGetMessageResp(getMockGetMessageResp());
+      replyDrawer.data.replies.push(getMockGetMessageResp().data);
     },
   );
 };

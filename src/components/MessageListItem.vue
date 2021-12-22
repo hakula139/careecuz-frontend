@@ -3,17 +3,7 @@
     <a-comment class="p-3 bg-white rounded-2xl">
       <template #actions>
         <a-space>
-          <a-button
-            @click="
-              $router.push({
-                name: 'MessageReplyPage',
-                params: {
-                  channelId,
-                  messageId: data.id,
-                },
-              })
-            "
-          >
+          <a-button @click="$router.push({ name: 'MessageReplyPage', params: { channelId, messageId: data.id } })">
             <template #icon>
               <message-outlined />
             </template>
