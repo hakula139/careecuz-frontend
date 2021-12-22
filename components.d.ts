@@ -25,6 +25,7 @@ declare module 'vue' {
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
     ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];
     HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled'];
+    MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];

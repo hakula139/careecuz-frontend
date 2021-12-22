@@ -12,36 +12,7 @@
       :data-source="channelPage.messages"
     >
       <template #renderItem="{ item }">
-        <a-list-item>
-          <a-comment class="p-3 bg-white rounded-2xl">
-            <template #actions>
-              <a-space>
-                <a-button size="small">
-                  <span v-if="item.replies.length > 0">
-                    <message-outlined />
-                    {{ item.replies.length }} 个回复
-                  </span>
-                </a-button>
-              </a-space>
-            </template>
-            <template #author>
-              <span>{{ getUsername(item.user.userId) }}</span>
-            </template>
-            <template #avatar>
-              <a-avatar size="large">
-                {{ getUsername(item.user.userId)[0] }}
-              </a-avatar>
-            </template>
-            <template #content>
-              <p>{{ item.content }}</p>
-            </template>
-            <template #datetime>
-              <a-tooltip :title="item.time">
-                <span>{{ getRelativeTime(item.time) }}</span>
-              </a-tooltip>
-            </template>
-          </a-comment>
-        </a-list-item>
+        <message-list-item :data="item" />
       </template>
 
       <template #header>
@@ -87,9 +58,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { MAX_MESSAGE_COUNT, META_INFO, TIMEOUT } from '@/configs';
-import {
-  getRelativeTime, getUsername, inject, openMessage,
-} from '@/composables';
+import { inject, openMessage } from '@/composables';
 import {
   ChannelInfo,
   GetChannelReq,
