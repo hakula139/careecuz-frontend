@@ -44,7 +44,7 @@ import { inject, openMessage } from '@/composables';
 import {
   GetMessageReq, GetMessageResp, Message, User,
 } from '@/types';
-import { getMockGetHistoryMessagesResp, getMockGetMessageResp } from '@/api/mock';
+import { getMockGetMessageResp } from '@/api/mock';
 import MessageReplyListItem from '@/components/MessageReplyListItem.vue';
 
 const route = useRoute();
@@ -114,7 +114,6 @@ const getMessage = (): void => {
       if (err) openMessage('error', '请求超时');
       // FIXME: remove mock data
       onGetMessageResp(getMockGetMessageResp());
-      replyDrawer.data.replies.push(...getMockGetHistoryMessagesResp().data);
     },
   );
 };

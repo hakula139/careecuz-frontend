@@ -72,7 +72,7 @@ import {
   GetChannelResp,
   GetHistoryMessagesReq,
   GetHistoryMessagesResp,
-  Message,
+  MessageSummary,
   PushNewMessage,
 } from '@/types';
 import { mockGetChannelResp, getMockGetHistoryMessagesResp, getMockPushNewMessage } from '@/api/mock';
@@ -114,7 +114,7 @@ const channelPage = reactive({
   info: {
     name: '加载中...',
   } as ChannelInfo,
-  messages: [] as Message[],
+  messages: [] as MessageSummary[],
 });
 
 const onGetChannelResp = (resp: GetChannelResp): void => {

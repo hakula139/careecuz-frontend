@@ -4,7 +4,7 @@ export interface ChannelInfo {
 
 export interface ChannelForm extends ChannelInfo {}
 
-export interface ChannelListItem extends ChannelForm {
+export interface ChannelSummary extends ChannelInfo {
   id: number;
   replyCount: number;
   lastReplyTime: string;

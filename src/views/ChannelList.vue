@@ -61,7 +61,7 @@ import { ColumnsType } from 'ant-design-vue/es/table';
 
 import { META_INFO, TIMEOUT } from '@/configs';
 import { getRelativeTime, inject, openMessage } from '@/composables';
-import { ChannelListItem, GetChannelsResp } from '@/types';
+import { ChannelSummary, GetChannelsResp } from '@/types';
 import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
@@ -95,10 +95,10 @@ const columns: ColumnsType = [
 
 const channels = reactive({
   loading: true,
-  data: [] as ChannelListItem[],
+  data: [] as ChannelSummary[],
 });
 
-const compareChannels = (a: ChannelListItem, b: ChannelListItem): number => {
+const compareChannels = (a: ChannelSummary, b: ChannelSummary): number => {
   if (a.isTop && !b.isTop) return -1;
   if (!a.isTop && b.isTop) return 1;
   return b.lastReplyTime.localeCompare(a.lastReplyTime);
@@ -127,7 +127,7 @@ const getChannels = (): void => {
   });
 };
 
-const customRow = (record: ChannelListItem) => ({
+const customRow = (record: ChannelSummary) => ({
   onClick: () => {
     router.push({
       name: 'ChannelPage',

@@ -1,17 +1,17 @@
 <template>
   <a-comment class="p-3 bg-white rounded-2xl">
     <template #actions>
-      <a-space>
+      <a-space size="middle">
         <a-button @click="$router.push({ name: 'MessageReplyPage', params: { channelId, messageId: data.id } })">
           <template #icon>
             <message-outlined />
           </template>
-          <span v-if="data.replies.length > 0">{{ data.replies.length }} 个回复</span>
+          <span v-if="data.replyCount > 0">{{ data.replyCount }}</span>
           <span v-else>回复</span>
         </a-button>
-        <span v-if="data.replies.length > 0">
+        <span v-if="data.replyCount > 0">
           最后回复
-          {{ getRelativeTime(data.replies[data.replies.length - 1].time) }}
+          {{ getRelativeTime(data.lastReplyTime) }}
         </span>
       </a-space>
     </template>
@@ -38,12 +38,12 @@
 // #region imports
 
 import { getRelativeTime, getUsername } from '@/composables';
-import { Message } from '@/types';
+import { MessageSummary } from '@/types';
 
 // #endregion
 
 defineProps<{
   channelId: number;
-  data: Message;
+  data: MessageSummary;
 }>();
 </script>
