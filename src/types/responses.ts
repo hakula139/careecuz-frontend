@@ -14,14 +14,16 @@ export interface GetChannelResp extends Resp {
   data: ChannelInfo;
 }
 
-export interface PushNewMessage {
-  data: Message;
+export interface AddChannelResp extends Resp {
+  id: number;
 }
 
 export interface GetHistoryMessagesResp extends Resp {
   data: Message[];
 }
 
-export interface AddChannelResp extends Resp {
-  id: number;
+export interface PushNewMessage {
+  data: Message;
 }
+
+export interface GetMessageResp extends Resp, PushNewMessage {}

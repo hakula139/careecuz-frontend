@@ -1,7 +1,7 @@
 <template>
   <a-page-header
     :title="channelPage.info.name"
-    @back="router.push({ name: 'ChannelList' })"
+    @back="$router.push({ name: 'ChannelList' })"
   />
   <div
     ref="containerRef"
@@ -46,6 +46,8 @@
       </template>
     </a-button>
   </a-affix>
+
+  <router-view />
 </template>
 
 <script setup lang="ts">
@@ -54,7 +56,7 @@
 import {
   computed, nextTick, onUnmounted, reactive, ref,
 } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { MAX_MESSAGE_COUNT, META_INFO, TIMEOUT } from '@/configs';
@@ -71,7 +73,6 @@ import {
 import { mockGetChannelResp, getMockGetHistoryMessagesResp, getMockPushNewMessage } from '@/api/mock';
 
 const route = useRoute();
-const router = useRouter();
 const socket = inject<Socket>('socket');
 
 // #endregion
@@ -101,9 +102,10 @@ const scrollToPosition = (position: number, smooth: boolean = true): void => {
 
 // #region channel page
 
+const channelId = computed(() => parseInt(route.params.id as string, 10));
+
 const channelPage = reactive({
   loading: true,
-  id: computed(() => parseInt(route.params.id as string, 10)),
   info: {
     name: '加载中...',
   } as ChannelInfo,
@@ -127,7 +129,7 @@ const getChannel = (): void => {
   socket.timeout(TIMEOUT).emit(
     'getChannelReq',
     {
-      id: channelPage.id,
+      id: channelId.value,
     } as GetChannelReq,
     (err: Error): void => {
       if (err) openMessage('error', '请求超时');
@@ -162,7 +164,7 @@ const getHistoryMessages = (): void => {
   socket.timeout(TIMEOUT).emit(
     'getHistoryMessagesReq',
     {
-      id: channelPage.id,
+      id: channelId.value,
       maxMessageCount: MAX_MESSAGE_COUNT,
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,

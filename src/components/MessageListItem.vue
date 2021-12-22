@@ -3,12 +3,17 @@
     <a-comment class="p-3 bg-white rounded-2xl">
       <template #actions>
         <a-space>
-          <a-button size="small">
-            <span v-if="props.data.replies.length > 0">
+          <a-button @click="$router.push({ name: 'MessageReplyPage', params: { id: props.data.id } })">
+            <template #icon>
               <message-outlined />
-              {{ props.data.replies.length }} 个回复
-            </span>
+            </template>
+            <span v-if="props.data.replies.length > 0">{{ props.data.replies.length }} 个回复</span>
+            <span v-else>回复</span>
           </a-button>
+          <span v-if="props.data.replies.length > 0">
+            最后回复
+            {{ getRelativeTime(props.data.replies[props.data.replies.length - 1].time) }}
+          </span>
         </a-space>
       </template>
       <template #author>
@@ -32,8 +37,12 @@
 </template>
 
 <script setup lang="ts">
+// #region imports
+
 import { getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
+
+// #endregion
 
 const props = defineProps<{
   data: Message;

@@ -7,5 +7,4 @@ export interface Message {
   time: string;
   replyTo: number;
   replies: Message[];
-  lastReplyTime?: string;
 }
