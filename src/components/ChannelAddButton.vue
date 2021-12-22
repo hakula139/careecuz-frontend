@@ -99,12 +99,10 @@ const onAddChannelResp = (resp: AddChannelResp): void => {
   channelDrawer.loading = false;
   if (resp.code === 200) {
     console.log('channel id:', resp.id);
-    setTimeout(() => {
-      router.push({
-        name: 'ChannelPage',
-        params: { id: resp.id },
-      });
-    }, 1000);
+    router.push({
+      name: 'ChannelPage',
+      params: { channelId: resp.id },
+    });
   } else {
     console.log('failed to add channel:', resp.message);
     openMessage('error', '创建失败');

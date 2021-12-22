@@ -131,7 +131,7 @@ const customRow = (record: ChannelListItem) => ({
   onClick: () => {
     router.push({
       name: 'ChannelPage',
-      params: { id: record.id },
+      params: { channelId: record.id },
     });
   },
 });

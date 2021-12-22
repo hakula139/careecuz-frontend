@@ -14,12 +14,12 @@ const routes: Array<RouteRecordRaw> = [
     component: RootLayout,
     children: [
       {
-        path: 'channels/:id',
+        path: 'channels/:channelId',
         name: 'ChannelPage',
         component: ChannelPage,
         children: [
           {
-            path: 'messages/:id',
+            path: 'messages/:messageId',
             name: 'MessageReplyPage',
             component: MessageReplyPage,
           },

@@ -10,8 +10,8 @@
       :loading="replyDrawer.loading"
       :data-source="replyDrawer.data.replies"
     >
-      <template #renderItem="{ item }">
-        <message-list-item :data="item" />
+      <template #renderItem="{ _item }">
+        <div />
       </template>
     </a-list>
   </a-drawer>
@@ -39,8 +39,8 @@ const socket = inject<Socket>('socket');
 
 // #region reply drawer
 
-const channelId = computed(() => parseInt(route.params.id[0], 10));
-const messageId = computed(() => parseInt(route.params.id[1], 10));
+const channelId = computed(() => parseInt(route.params.channelId as string, 10));
+const messageId = computed(() => parseInt(route.params.messageId as string, 10));
 
 const replyDrawer = reactive({
   visible: false,
@@ -67,7 +67,7 @@ const closeReplyDrawer = (): void => {
   setTimeout((): void => {
     router.push({
       name: 'ChannelPage',
-      params: { id: channelId.value },
+      params: { channelId: channelId.value },
     });
   }, 500);
 };

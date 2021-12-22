@@ -12,7 +12,10 @@
       :data-source="channelPage.messages"
     >
       <template #renderItem="{ item }">
-        <message-list-item :data="item" />
+        <message-list-item
+          :channel-id="channelId"
+          :data="item"
+        />
       </template>
 
       <template #header>
@@ -102,7 +105,7 @@ const scrollToPosition = (position: number, smooth: boolean = true): void => {
 
 // #region channel page
 
-const channelId = computed(() => parseInt(route.params.id as string, 10));
+const channelId = computed(() => parseInt(route.params.channelId as string, 10));
 
 const channelPage = reactive({
   loading: true,
