@@ -6,3 +6,19 @@
 svg {
   vertical-align: initial;
 }
+
+@layer components {
+  .form-entry {
+    input {
+      @apply text-2xl h-14;
+    }
+
+    .ant-input-clear-icon svg {
+      @apply text-lg;
+    }
+  }
+
+  .ant-comment .ant-comment-content-author {
+    @apply justify-between;
+  }
+}

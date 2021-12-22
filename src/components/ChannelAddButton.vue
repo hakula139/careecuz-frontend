@@ -141,17 +141,3 @@ const onAddChannelClick = (): void => {
 
 // #endregion
 </script>
-
-<style>
-@layer components {
-  .form-entry {
-    input {
-      @apply h-14 text-2xl;
-    }
-
-    .ant-input-clear-icon svg {
-      @apply text-lg;
-    }
-  }
-}
-</style>

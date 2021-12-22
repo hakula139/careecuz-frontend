@@ -25,6 +25,7 @@ declare module 'vue' {
     ATable: typeof import('ant-design-vue/es')['Table'];
     ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
+    CaretRightOutlined: typeof import('@ant-design/icons-vue')['CaretRightOutlined'];
     ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];
     HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled'];
     MessageItem: typeof import('./src/components/MessageItem.vue')['default'];

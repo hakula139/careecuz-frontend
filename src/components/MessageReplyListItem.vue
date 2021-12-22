@@ -1,7 +1,12 @@
 <template>
   <a-comment @click="() => {}">
     <template #author>
-      <span>{{ getUsername(data.user.userId) }}</span>
+      <a-space>
+        <span>{{ getUsername(data.user.userId) }}</span>
+        <span>#{{ data.id }}</span>
+        <caret-right-outlined v-if="data.replyTo" />
+        <span v-if="data.replyTo">#{{ data.replyTo }}</span>
+      </a-space>
     </template>
     <template #avatar>
       <a-avatar size="large">
