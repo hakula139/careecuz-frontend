@@ -1,12 +1,13 @@
 <template>
   <a-page-header
     :title="channelPage.info.name"
-    @back="router.go(-1)"
+    @back="router.push({ name: 'ChannelList' })"
   />
-  <div class="content-container">
-    <div ref="contentTopRef" />
+  <div
+    ref="containerRef"
+    class="content-container"
+  >
     <a-list
-      ref="contentRef"
       item-layout="horizontal"
       :data-source="channelPage.messages"
     >
@@ -42,8 +43,22 @@
           </a-comment>
         </a-list-item>
       </template>
+
+      <template #header>
+        <div
+          ref="containerHeaderRef"
+          class="flex justify-center"
+        >
+          <a-button @click="getHistoryMessages">
+            加载更多
+          </a-button>
+        </div>
+      </template>
+
+      <template #footer>
+        <div ref="containerFooterRef" />
+      </template>
     </a-list>
-    <div ref="contentBottomRef" />
   </div>
 
   <a-affix
@@ -66,12 +81,12 @@
 // #region imports
 
 import {
-  computed, onMounted, onUnmounted, reactive, ref,
+  computed, onUnmounted, reactive, ref,
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
-import { MAX_MESSAGE_COUNT, TIMEOUT } from '@/configs';
+import { MAX_MESSAGE_COUNT, META_INFO, TIMEOUT } from '@/configs';
 import {
   getRelativeTime, getUsername, inject, openMessage,
 } from '@/composables';
@@ -84,11 +99,27 @@ import {
   Message,
   PushNewMessage,
 } from '@/types';
-import { mockGetChannelResp, mockGetHistoryMessagesResp } from '@/api/mock';
+import { mockGetChannelResp, getMockGetHistoryMessagesResp, getMockPushNewMessage } from '@/api/mock';
 
 const route = useRoute();
 const router = useRouter();
 const socket = inject<Socket>('socket');
+
+// #endregion
+
+// #region scroll to bottom
+
+const containerRef = ref<HTMLDivElement>();
+const containerFooterRef = ref<HTMLDivElement>();
+
+const isAtBottom = (): boolean => {
+  const el = containerRef.value;
+  return el !== undefined && el.scrollTop >= el.scrollHeight - el.clientHeight;
+};
+
+const scrollToBottom = (): void => {
+  containerFooterRef.value?.scrollIntoView({ behavior: 'smooth' });
+};
 
 // #endregion
 
@@ -105,6 +136,7 @@ const channelPage = reactive({
 const onGetChannelResp = (resp: GetChannelResp): void => {
   if (resp.code === 200) {
     console.log('channel page:', resp.data);
+    document.title = `${resp.data.name} - ${META_INFO.TITLE}`;
     channelPage.info = resp.data;
   } else {
     console.log('failed to get channel info:', resp.message);
@@ -153,48 +185,39 @@ const getHistoryMessages = (): void => {
     } as GetHistoryMessagesReq,
     (_err: Error): void => {
       // FIXME: remove mock data
-      onGetHistoryMessagesResp(mockGetHistoryMessagesResp);
+      onGetHistoryMessagesResp(getMockGetHistoryMessagesResp());
     },
   );
 };
 
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
+  const prevIsAtBottom = isAtBottom();
   channelPage.messages.push(resp.data);
+  setTimeout((): void => {
+    if (prevIsAtBottom) scrollToBottom();
+  }, 50);
 };
 
 socket.on('pushNewMessage', onPushNewMessage);
 
-// #endregion
-
-// #region scroll to bottom
-
-const contentTopRef = ref<HTMLDivElement>();
-const contentBottomRef = ref<HTMLDivElement>();
-
-const scrollToBottom = (): void => {
-  contentBottomRef.value?.scrollIntoView();
-};
-
-const scrollHandler = (_e: Event): void => {
-  // TODO: Do something.
-};
+// FIXME: remove mock data
+const intervalHandler = setInterval((): void => {
+  onPushNewMessage(getMockPushNewMessage());
+}, 2000);
 
 // #endregion
-
-onMounted((): void => {
-  window.addEventListener('scroll', scrollHandler);
-});
-
-onUnmounted((): void => {
-  window.removeEventListener('scroll', scrollHandler);
-});
 
 const reload = (): void => {
   getChannel();
+  getHistoryMessages();
 };
 
 reload();
+
+onUnmounted((): void => {
+  clearInterval(intervalHandler);
+});
 </script>
 
 <style scoped>

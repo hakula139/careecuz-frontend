@@ -14,11 +14,13 @@ export const mockMessageTemplate = {
   'replies': [],
 };
 
-export const mockPushNewMessage: PushNewMessage = mock({
-  data: mockMessageTemplate,
-});
+export const getMockPushNewMessage = (): PushNewMessage =>
+  mock({
+    data: mockMessageTemplate,
+  });
 
-export const mockGetHistoryMessagesResp: GetHistoryMessagesResp = mock({
-  ...mockRespTemplate,
-  'data|20': [mockMessageTemplate],
-});
+export const getMockGetHistoryMessagesResp = (): GetHistoryMessagesResp =>
+  mock({
+    ...mockRespTemplate,
+    'data|20': [mockMessageTemplate],
+  });

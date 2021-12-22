@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
-    "@vueuse/core": "^7.4.0",
     "ant-design-vue": "^3.0.0-alpha.16",
     "compression": "^1.7.4",
     "connect-history-api-fallback": "^1.6.0",

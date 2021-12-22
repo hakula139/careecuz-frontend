@@ -59,7 +59,7 @@ import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { ColumnsType } from 'ant-design-vue/es/table';
 
-import { TIMEOUT } from '@/configs';
+import { META_INFO, TIMEOUT } from '@/configs';
 import { getRelativeTime, inject, openMessage } from '@/composables';
 import { ChannelListItem, GetChannelsResp } from '@/types';
 import { mockGetChannelsResp } from '@/api/mock';
@@ -139,6 +139,7 @@ const customRow = (record: ChannelListItem) => ({
 // #endregion
 
 const reload = (): void => {
+  document.title = META_INFO.TITLE;
   getChannels();
 };
 
