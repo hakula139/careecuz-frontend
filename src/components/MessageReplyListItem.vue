@@ -27,12 +27,26 @@
 <script setup lang="ts">
 // #region imports
 
+import { reactive } from 'vue';
+
 import { getRelativeTime, getUsername } from '@/composables';
-import { Message } from '@/types';
+import { Message, MessageForm } from '@/types';
 
 // #endregion
 
 defineProps<{
   data: Message;
 }>();
+
+// #region reply drawer
+
+const replyDrawer = reactive({
+  visible: false,
+  data: {
+    content: '',
+    replyTo: 0,
+  } as MessageForm,
+});
+
+// #endregion
 </script>

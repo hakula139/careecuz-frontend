@@ -1,11 +1,14 @@
 import { User } from './user';
 
-interface MessageBase {
+export interface MessageForm {
+  content: string;
+  replyTo: number;
+}
+
+interface MessageBase extends MessageForm {
   id: number;
   user: User;
-  content: string;
   time: string;
-  replyTo: number;
 }
 
 export interface MessageSummary extends MessageBase {

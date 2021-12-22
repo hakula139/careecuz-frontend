@@ -29,3 +29,7 @@ export interface PushNewMessage {
 export interface GetMessageResp extends Resp {
   data: Message;
 }
+
+export interface AddMessageResp extends Resp {
+  id: number;
+}
