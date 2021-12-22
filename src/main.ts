@@ -11,7 +11,7 @@ const app = createApp(App);
 app.use(router);
 
 app.use(io, {
-  uri: VITE_API_URL as string,
+  uri: VITE_API_URL,
   opts: {
     reconnection: true,
   },

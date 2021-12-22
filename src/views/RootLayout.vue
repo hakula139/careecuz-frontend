@@ -1,26 +1,18 @@
 <template>
   <a-layout class="w-full h-screen overflow-y-auto">
     <a-layout-header class="sticky top-0 z-50 flex items-center justify-center">
-      <span class="text-2xl text-white">{{ meta.title }}</span>
+      <span class="text-2xl text-white">{{ META_INFO.TITLE }}</span>
     </a-layout-header>
     <a-layout-content>
       <router-view />
-      <a-layout-footer class="px-2 text-center text-gray-500">
-        &copy; {{ meta.currentYear }} {{ meta.title }}
-        | Made with
-        <heart-filled class="text-red-500" />
-        by {{ meta.author }}
-      </a-layout-footer>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+// #region imports
 
-const meta = {
-  title: 'CareeCuz',
-  author: 'Hakula',
-  currentYear: computed(() => new Date().getFullYear()),
-};
+import { META_INFO } from '@/configs';
+
+// #endregion
 </script>

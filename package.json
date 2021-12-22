@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install && chmod +x .husky/*"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
@@ -43,7 +43,7 @@
     "prettier-eslint": "^13.0.0",
     "prettier-eslint-cli": "^5.0.1",
     "tailwindcss": "^2.2.19",
-    "typescript": "^4.5.2",
+    "typescript": "^4.5.4",
     "unplugin-vue-components": "^0.17.9",
     "vite": "^2.6.14",
     "vite-tsconfig-paths": "^3.3.17",

@@ -43,6 +43,8 @@
 </template>
 
 <script setup lang="ts">
+// #region imports
+
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
@@ -57,6 +59,8 @@ import { mockAddChannelResp } from '@/api/mock';
 const router = useRouter();
 const socket = inject<Socket>('socket');
 const { useForm } = Form;
+
+// #endregion
 
 // #region channel drawer
 

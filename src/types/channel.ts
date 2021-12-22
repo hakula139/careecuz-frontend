@@ -1,8 +1,10 @@
-export interface ChannelForm {
+export interface ChannelInfo {
   name: string;
 }
 
-export interface Channel extends ChannelForm {
+export interface ChannelForm extends ChannelInfo {}
+
+export interface ChannelListItem extends ChannelForm {
   id: number;
   replyCount: number;
   lastReplyTime: string;
