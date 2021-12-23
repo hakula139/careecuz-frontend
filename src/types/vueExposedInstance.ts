@@ -9,5 +9,5 @@ export interface ChannelAddDrawerExposed {
 }
 
 export interface MessageAddDrawerExposed {
-  openMessageAddDrawer: (replyTo: number) => void;
+  openMessageAddDrawer: (replyTo?: number) => void;
 }

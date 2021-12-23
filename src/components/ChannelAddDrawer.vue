@@ -104,6 +104,7 @@ socket.on('addChannelResp', onAddChannelResp);
 
 const addChannel = (): void => {
   channelAddDrawer.loading = true;
+  console.log('add channel:', channelAddDrawer.data);
   socket.timeout(TIMEOUT).emit(
     'addChannelReq',
     {

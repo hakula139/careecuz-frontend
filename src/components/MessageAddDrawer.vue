@@ -63,6 +63,10 @@ const { useForm } = Form;
 
 // #endregion
 
+const props = defineProps<{
+  channelId: number;
+}>();
+
 const emit = defineEmits<{
   (event: 'done'): void;
 }>();
@@ -95,7 +99,7 @@ const messageFormRules = reactive({
 
 const { clearValidate, resetFields, validate } = useForm(messageAddDrawer.data, messageFormRules);
 
-const openMessageAddDrawer = (replyTo: number): void => {
+const openMessageAddDrawer = (replyTo: number = 0): void => {
   messageAddDrawer.data.replyTo = replyTo;
   messageAddDrawer.visible = true;
 };
@@ -126,12 +130,14 @@ socket.on('addMessageResp', onAddMessageResp);
 
 const addMessage = (): void => {
   messageAddDrawer.loading = true;
+  console.log('add message:', messageAddDrawer.data);
   socket.timeout(TIMEOUT).emit(
     'addMessageReq',
     {
       // TODO: implement login, store userId and userToken into Vuex
       userId: '',
       userToken: '',
+      channelId: props.channelId,
       data: messageAddDrawer.data,
     } as AddMessageReq,
     (err: Error): void => {

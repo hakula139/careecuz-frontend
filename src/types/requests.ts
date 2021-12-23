@@ -22,5 +22,6 @@ export interface GetMessageReq {
 export interface AddMessageReq {
   userId: string;
   userToken: string;
+  channelId: number;
   data: MessageForm;
 }

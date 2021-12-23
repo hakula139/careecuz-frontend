@@ -40,6 +40,7 @@
 
   <message-add-drawer
     ref="messageAddDrawerRef"
+    :channel-id="channelId"
     @done="listScrollToBottom"
   />
 </template>

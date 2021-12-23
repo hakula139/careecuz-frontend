@@ -35,6 +35,7 @@ declare module 'vue' {
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
+    PlusOutlined: typeof import('@ant-design/icons-vue')['PlusOutlined'];
     ShrinkOutlined: typeof import('@ant-design/icons-vue')['ShrinkOutlined'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
   }

@@ -36,18 +36,39 @@
 
   <a-affix
     class="fixed right-8"
-    :offset-bottom="60"
+    :offset-bottom="100"
   >
-    <a-button
-      shape="circle"
-      size="large"
-      @click="containerScrollToBottom"
+    <a-space
+      size="middle"
+      direction="vertical"
     >
-      <template #icon>
-        <caret-down-outlined />
-      </template>
-    </a-button>
+      <a-button
+        type="primary"
+        shape="circle"
+        size="large"
+        @click="openMessageAddDrawer"
+      >
+        <template #icon>
+          <plus-outlined />
+        </template>
+      </a-button>
+      <a-button
+        shape="circle"
+        size="large"
+        @click="containerScrollToBottom"
+      >
+        <template #icon>
+          <caret-down-outlined />
+        </template>
+      </a-button>
+    </a-space>
   </a-affix>
+
+  <message-add-drawer
+    ref="messageAddDrawerRef"
+    :channel-id="channelId"
+    @done="containerScrollToBottom"
+  />
 
   <router-view />
 </template>
@@ -71,6 +92,7 @@ import {
   GetChannelResp,
   GetHistoryMessagesReq,
   GetHistoryMessagesResp,
+  MessageAddDrawerExposed,
   MessageSummary,
   PushNewMessage,
 } from '@/types';
@@ -184,6 +206,16 @@ socket.on('pushNewMessage', onPushNewMessage);
 const intervalHandler = setInterval((): void => {
   onPushNewMessage(getMockPushNewMessage());
 }, 2000);
+
+// #endregion
+
+// #region message add drawer
+
+const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
+
+const openMessageAddDrawer = (): void => {
+  messageAddDrawerRef.value?.openMessageAddDrawer();
+};
 
 // #endregion
 

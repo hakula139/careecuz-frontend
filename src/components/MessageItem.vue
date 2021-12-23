@@ -42,7 +42,7 @@ const emit = defineEmits<{
   (event: 'addMessage', replyTo: number): void;
 }>();
 
-// #region reply list item
+// #region message item
 
 const onMessageClick = (): void => {
   emit('addMessage', props.data.id);
