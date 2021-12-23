@@ -1,5 +1,5 @@
 <template>
-  <a-comment class="p-3 bg-white rounded-2xl">
+  <a-comment class="px-3 bg-white rounded-2xl">
     <template #actions>
       <a-space size="middle">
         <a-button @click="openReplyPage">
