@@ -232,10 +232,8 @@ onUnmounted((): void => {
 </script>
 
 <style scoped>
-@layer components {
-  .content-container {
-    @apply p-3 pt-0 overflow-y-auto;
-    height: calc(100% - 72px);
-  }
+.content-container {
+  @apply p-3 pt-0 overflow-y-auto;
+  height: calc(100% - 72px);
 }
 </style>

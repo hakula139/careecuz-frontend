@@ -3,5 +3,6 @@ module.exports = {
     'tailwindcss': {},
     'tailwindcss/nesting': {},
     'autoprefixer': {},
+    'cssnano': {},
   },
 };

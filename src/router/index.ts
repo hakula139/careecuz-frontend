@@ -3,9 +3,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { BASE_URL } from '@/configs';
 
 const RootLayout = () => import(/* webpackChunkName: "root-layout" */ '@/views/RootLayout.vue');
-const ChannelPage = () => import(/* webpackChunkName: "channel" */ '@/views/ChannelPage.vue');
-const ChannelList = () => import(/* webpackChunkName: "channel" */ '@/views/ChannelList.vue');
-const MessageReplyPage = () => import(/* webpackChunkName: "message" */ '@/views/MessageReplyPage.vue');
+const ChannelPage = () => import(/* webpackChunkName: "channel-page" */ '@/views/ChannelPage.vue');
+const ChannelList = () => import(/* webpackChunkName: "channel-list" */ '@/views/ChannelList.vue');
+const MessageReplyPage = () => import(/* webpackChunkName: "message-reply-page" */ '@/views/MessageReplyPage.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {

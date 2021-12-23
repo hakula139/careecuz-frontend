@@ -161,9 +161,7 @@ reload();
 </script>
 
 <style scoped>
-@layer components {
-  .ant-skeleton {
-    @apply py-4;
-  }
+.ant-skeleton {
+  @apply py-4;
 }
 </style>
