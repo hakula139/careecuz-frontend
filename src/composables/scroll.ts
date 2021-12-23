@@ -8,3 +8,6 @@ export const scrollToPosition = (el: HTMLElement, position: number, smooth: bool
     behavior: smooth ? 'smooth' : 'auto',
   });
 };
+
+export const scrollIntoView = (el: HTMLElement, smooth: boolean = true): void =>
+  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });

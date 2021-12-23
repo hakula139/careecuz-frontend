@@ -33,11 +33,19 @@
             />
           </template>
         </a-list>
+        <div ref="listBottomRef" />
       </a-card>
     </a-skeleton>
   </a-drawer>
 
-  <message-add-drawer ref="messageAddDrawerRef" />
+  <message-add-drawer
+    ref="messageAddDrawerRef"
+    @done="
+      () => {
+        if (listBottomRef) scrollIntoView(listBottomRef);
+      }
+    "
+  />
 </template>
 
 <script setup lang="ts">
@@ -48,7 +56,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { TIMEOUT } from '@/configs';
-import { inject, openMessage } from '@/composables';
+import { inject, openMessage, scrollIntoView } from '@/composables';
 import {
   GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, User,
 } from '@/types';
@@ -59,6 +67,8 @@ const router = useRouter();
 const socket = inject<Socket>('socket');
 
 // #endregion
+
+const listBottomRef = ref<HTMLDivElement>();
 
 // #region reply drawer
 

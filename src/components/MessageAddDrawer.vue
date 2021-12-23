@@ -52,6 +52,10 @@ const { useForm } = Form;
 
 // #endregion
 
+const emit = defineEmits<{
+  (event: 'done'): void;
+}>();
+
 // #region message add drawer
 
 const messageAddDrawer = reactive({
@@ -66,7 +70,7 @@ const messageAddDrawer = reactive({
 });
 
 const messageFormRules = reactive({
-  name: [
+  content: [
     {
       required: true,
       message: '评论内容不能为空',
@@ -94,6 +98,7 @@ const onAddMessageResp = (resp: AddMessageResp): void => {
   if (resp.code === 200) {
     console.log('message id:', resp.id);
     resetFields();
+    emit('done');
   } else {
     console.log('failed to add message:', resp.message);
     openMessage('error', '发表失败');
