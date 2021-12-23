@@ -41,7 +41,11 @@
     <a-button
       shape="circle"
       size="large"
-      @click="scrollToPosition(0)"
+      @click="
+        () => {
+          if (containerRef) scrollToPosition(containerRef, 0);
+        }
+      "
     >
       <template #icon>
         <caret-down-outlined />
@@ -62,7 +66,9 @@ import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { MAX_MESSAGE_COUNT, META_INFO, TIMEOUT } from '@/configs';
-import { inject, openMessage } from '@/composables';
+import {
+  getPosition, inject, isAtBottom, openMessage, scrollToPosition,
+} from '@/composables';
 import {
   ChannelInfo,
   GetChannelReq,
@@ -79,28 +85,7 @@ const socket = inject<Socket>('socket');
 
 // #endregion
 
-// #region scroll
-
 const containerRef = ref<HTMLDivElement>();
-
-const getPosition = (): number => {
-  const el = containerRef.value;
-  return el ? el.scrollHeight - el.scrollTop - el.clientHeight : 0;
-};
-
-const isAtBottom = (): boolean => getPosition() <= 0;
-
-const scrollToPosition = (position: number, smooth: boolean = true): void => {
-  const el = containerRef.value;
-  if (el) {
-    el.scrollTo({
-      top: el.scrollHeight - el.clientHeight - position,
-      behavior: smooth ? 'smooth' : 'auto',
-    });
-  }
-};
-
-// #endregion
 
 // #region channel page
 
@@ -149,10 +134,12 @@ const onGetHistoryMessagesResp = (resp: GetHistoryMessagesResp): void => {
   channelPage.loading = false;
   if (resp.code === 200) {
     console.log('history messages:', resp.data);
-    const prevPosition = getPosition();
+    const prevPosition = containerRef.value ? getPosition(containerRef.value) : 0;
     channelPage.messages.unshift(...resp.data);
     nextTick((): void => {
-      scrollToPosition(prevPosition, !prevPosition);
+      if (containerRef.value) {
+        scrollToPosition(containerRef.value, prevPosition, !prevPosition);
+      }
     });
   }
 };
@@ -180,11 +167,11 @@ const getHistoryMessages = (): void => {
 
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
-  const prevIsAtBottom = isAtBottom();
+  const prevIsAtBottom = containerRef.value ? isAtBottom(containerRef.value) : true;
   channelPage.messages.push(resp.data);
   nextTick((): void => {
-    if (prevIsAtBottom) {
-      scrollToPosition(0);
+    if (containerRef.value && prevIsAtBottom) {
+      scrollToPosition(containerRef.value, 0);
     }
   });
 };
