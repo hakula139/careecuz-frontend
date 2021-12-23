@@ -1,5 +1,5 @@
-import { ChannelInfo, ChannelListItem } from './channel';
-import { Message } from './message';
+import { ChannelInfo, ChannelSummary } from './channel';
+import { Message, MessageSummary } from './message';
 
 export interface Resp {
   code: number;
@@ -7,21 +7,29 @@ export interface Resp {
 }
 
 export interface GetChannelsResp extends Resp {
-  data: ChannelListItem[];
+  data: ChannelSummary[];
 }
 
 export interface GetChannelResp extends Resp {
   data: ChannelInfo;
 }
 
-export interface PushNewMessage {
-  data: Message;
+export interface AddChannelResp extends Resp {
+  id: number;
 }
 
 export interface GetHistoryMessagesResp extends Resp {
-  data: Message[];
+  data: MessageSummary[];
 }
 
-export interface AddChannelResp extends Resp {
+export interface PushNewMessage {
+  data: MessageSummary;
+}
+
+export interface GetMessageResp extends Resp {
+  data: Message;
+}
+
+export interface AddMessageResp extends Resp {
   id: number;
 }

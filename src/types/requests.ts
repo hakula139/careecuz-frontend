@@ -1,7 +1,12 @@
 import { ChannelForm } from './channel';
+import { MessageForm } from './message';
 
 export interface GetChannelReq {
   id: number;
+}
+
+export interface AddChannelReq {
+  data: ChannelForm;
 }
 
 export interface GetHistoryMessagesReq extends GetChannelReq {
@@ -9,6 +14,14 @@ export interface GetHistoryMessagesReq extends GetChannelReq {
   maxMessageCount?: number;
 }
 
-export interface AddChannelReq {
-  data: ChannelForm;
+export interface GetMessageReq {
+  channelId: number;
+  messageId: number;
+}
+
+export interface AddMessageReq {
+  userId: string;
+  userToken: string;
+  channelId: number;
+  data: MessageForm;
 }

@@ -4,7 +4,14 @@
       class="px-4 py-6 md:px-0"
       size="middle"
     >
-      <channel-add-button />
+      <a-button
+        type="primary"
+        size="large"
+        @click="channelAddDrawerRef?.openChannelAddDrawer()"
+      >
+        创建频道
+      </a-button>
+
       <a-button
         size="large"
         @click="reload"
@@ -48,20 +55,22 @@
     </a-table>
   </div>
 
+  <channel-add-drawer ref="channelAddDrawerRef" />
+
   <page-footer />
 </template>
 
 <script setup lang="ts">
 // #region imports
 
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { ColumnsType } from 'ant-design-vue/es/table';
 
 import { META_INFO, TIMEOUT } from '@/configs';
 import { getRelativeTime, inject, openMessage } from '@/composables';
-import { ChannelListItem, GetChannelsResp } from '@/types';
+import { ChannelAddDrawerExposed, ChannelSummary, GetChannelsResp } from '@/types';
 import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
@@ -95,10 +104,10 @@ const columns: ColumnsType = [
 
 const channels = reactive({
   loading: true,
-  data: [] as ChannelListItem[],
+  data: [] as ChannelSummary[],
 });
 
-const compareChannels = (a: ChannelListItem, b: ChannelListItem): number => {
+const compareChannels = (a: ChannelSummary, b: ChannelSummary): number => {
   if (a.isTop && !b.isTop) return -1;
   if (!a.isTop && b.isTop) return 1;
   return b.lastReplyTime.localeCompare(a.lastReplyTime);
@@ -127,14 +136,20 @@ const getChannels = (): void => {
   });
 };
 
-const customRow = (record: ChannelListItem) => ({
+const customRow = (record: ChannelSummary) => ({
   onClick: () => {
     router.push({
       name: 'ChannelPage',
-      params: { id: record.id },
+      params: { channelId: record.id },
     });
   },
 });
+
+// #endregion
+
+// #region channel add drawer
+
+const channelAddDrawerRef = ref<ChannelAddDrawerExposed>();
 
 // #endregion
 

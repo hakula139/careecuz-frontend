@@ -1,7 +1,7 @@
 <template>
   <a-page-header
     :title="channelPage.info.name"
-    @back="router.push({ name: 'ChannelList' })"
+    @back="$router.push({ name: 'ChannelList' })"
   />
   <div
     ref="containerRef"
@@ -12,14 +12,16 @@
       :data-source="channelPage.messages"
     >
       <template #renderItem="{ item }">
-        <message-list-item :data="item" />
+        <a-list-item>
+          <message-list-item
+            :channel-id="channelId"
+            :data="item"
+          />
+        </a-list-item>
       </template>
 
       <template #header>
-        <div
-          ref="containerHeaderRef"
-          class="flex justify-center"
-        >
+        <div class="flex justify-center">
           <a-button
             v-show="channelPage.messages.length > 0"
             :loading="channelPage.loading"
@@ -34,18 +36,41 @@
 
   <a-affix
     class="fixed right-8"
-    :offset-bottom="60"
+    :offset-bottom="100"
   >
-    <a-button
-      shape="circle"
-      size="large"
-      @click="scrollToPosition(0)"
+    <a-space
+      size="middle"
+      direction="vertical"
     >
-      <template #icon>
-        <caret-down-outlined />
-      </template>
-    </a-button>
+      <a-button
+        type="primary"
+        shape="circle"
+        size="large"
+        @click="openMessageAddDrawer"
+      >
+        <template #icon>
+          <plus-outlined />
+        </template>
+      </a-button>
+      <a-button
+        shape="circle"
+        size="large"
+        @click="containerScrollToBottom"
+      >
+        <template #icon>
+          <caret-down-outlined />
+        </template>
+      </a-button>
+    </a-space>
   </a-affix>
+
+  <message-add-drawer
+    ref="messageAddDrawerRef"
+    :channel-id="channelId"
+    @done="containerScrollToBottom"
+  />
+
+  <router-view />
 </template>
 
 <script setup lang="ts">
@@ -54,60 +79,50 @@
 import {
   computed, nextTick, onUnmounted, reactive, ref,
 } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { MAX_MESSAGE_COUNT, META_INFO, TIMEOUT } from '@/configs';
-import { inject, openMessage } from '@/composables';
+import {
+  getPosition, inject, isAtBottom, openMessage, scrollToPosition,
+} from '@/composables';
 import {
   ChannelInfo,
   GetChannelReq,
   GetChannelResp,
   GetHistoryMessagesReq,
   GetHistoryMessagesResp,
-  Message,
+  MessageAddDrawerExposed,
+  MessageSummary,
   PushNewMessage,
 } from '@/types';
 import { mockGetChannelResp, getMockGetHistoryMessagesResp, getMockPushNewMessage } from '@/api/mock';
 
 const route = useRoute();
-const router = useRouter();
 const socket = inject<Socket>('socket');
 
 // #endregion
 
-// #region scroll
+// #region scroll to bottom
 
 const containerRef = ref<HTMLDivElement>();
 
-const getPosition = (): number => {
-  const el = containerRef.value;
-  return el ? el.scrollHeight - el.scrollTop - el.clientHeight : 0;
-};
-
-const isAtBottom = (): boolean => getPosition() <= 0;
-
-const scrollToPosition = (position: number, smooth: boolean = true): void => {
-  const el = containerRef.value;
-  if (el) {
-    el.scrollTo({
-      top: el.scrollHeight - el.clientHeight - position,
-      behavior: smooth ? 'smooth' : 'auto',
-    });
-  }
+const containerScrollToBottom = (): void => {
+  if (containerRef.value) scrollToPosition(containerRef.value, 0);
 };
 
 // #endregion
 
 // #region channel page
 
+const channelId = computed(() => parseInt(route.params.channelId as string, 10));
+
 const channelPage = reactive({
   loading: true,
-  id: computed(() => parseInt(route.params.id as string, 10)),
   info: {
     name: '加载中...',
   } as ChannelInfo,
-  messages: [] as Message[],
+  messages: [] as MessageSummary[],
 });
 
 const onGetChannelResp = (resp: GetChannelResp): void => {
@@ -127,7 +142,7 @@ const getChannel = (): void => {
   socket.timeout(TIMEOUT).emit(
     'getChannelReq',
     {
-      id: channelPage.id,
+      id: channelId.value,
     } as GetChannelReq,
     (err: Error): void => {
       if (err) openMessage('error', '请求超时');
@@ -145,10 +160,12 @@ const onGetHistoryMessagesResp = (resp: GetHistoryMessagesResp): void => {
   channelPage.loading = false;
   if (resp.code === 200) {
     console.log('history messages:', resp.data);
-    const prevPosition = getPosition();
+    const prevPosition = containerRef.value ? getPosition(containerRef.value) : 0;
     channelPage.messages.unshift(...resp.data);
     nextTick((): void => {
-      scrollToPosition(prevPosition, !prevPosition);
+      if (containerRef.value) {
+        scrollToPosition(containerRef.value, prevPosition, !prevPosition);
+      }
     });
   }
 };
@@ -162,7 +179,7 @@ const getHistoryMessages = (): void => {
   socket.timeout(TIMEOUT).emit(
     'getHistoryMessagesReq',
     {
-      id: channelPage.id,
+      id: channelId.value,
       maxMessageCount: MAX_MESSAGE_COUNT,
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,
@@ -176,12 +193,10 @@ const getHistoryMessages = (): void => {
 
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
-  const prevIsAtBottom = isAtBottom();
+  const prevIsAtBottom = containerRef.value ? isAtBottom(containerRef.value) : true;
   channelPage.messages.push(resp.data);
   nextTick((): void => {
-    if (prevIsAtBottom) {
-      scrollToPosition(0);
-    }
+    if (prevIsAtBottom) containerScrollToBottom();
   });
 };
 
@@ -191,6 +206,16 @@ socket.on('pushNewMessage', onPushNewMessage);
 const intervalHandler = setInterval((): void => {
   onPushNewMessage(getMockPushNewMessage());
 }, 2000);
+
+// #endregion
+
+// #region message add drawer
+
+const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
+
+const openMessageAddDrawer = (): void => {
+  messageAddDrawerRef.value?.openMessageAddDrawer();
+};
 
 // #endregion
 

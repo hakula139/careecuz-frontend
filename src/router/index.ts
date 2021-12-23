@@ -5,6 +5,7 @@ import { BASE_URL } from '@/configs';
 const RootLayout = () => import(/* webpackChunkName: "root-layout" */ '@/views/RootLayout.vue');
 const ChannelPage = () => import(/* webpackChunkName: "channel" */ '@/views/ChannelPage.vue');
 const ChannelList = () => import(/* webpackChunkName: "channel" */ '@/views/ChannelList.vue');
+const MessageReplyPage = () => import(/* webpackChunkName: "message" */ '@/views/MessageReplyPage.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -13,9 +14,16 @@ const routes: Array<RouteRecordRaw> = [
     component: RootLayout,
     children: [
       {
-        path: 'channels/:id',
+        path: 'channels/:channelId',
         name: 'ChannelPage',
         component: ChannelPage,
+        children: [
+          {
+            path: 'messages/:messageId',
+            name: 'MessageReplyPage',
+            component: MessageReplyPage,
+          },
+        ],
       },
       {
         path: 'channels',

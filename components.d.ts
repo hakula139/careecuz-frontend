@@ -7,6 +7,7 @@ declare module 'vue' {
     AAffix: typeof import('ant-design-vue/es')['Affix'];
     AAvatar: typeof import('ant-design-vue/es')['Avatar'];
     AButton: typeof import('ant-design-vue/es')['Button'];
+    ACard: typeof import('ant-design-vue/es')['Card'];
     AComment: typeof import('ant-design-vue/es')['Comment'];
     ADrawer: typeof import('ant-design-vue/es')['Drawer'];
     AForm: typeof import('ant-design-vue/es')['Form'];
@@ -19,15 +20,23 @@ declare module 'vue' {
     AList: typeof import('ant-design-vue/es')['List'];
     AListItem: typeof import('ant-design-vue/es')['ListItem'];
     APageHeader: typeof import('ant-design-vue/es')['PageHeader'];
+    ArrowsAltOutlined: typeof import('@ant-design/icons-vue')['ArrowsAltOutlined'];
+    ASkeleton: typeof import('ant-design-vue/es')['Skeleton'];
     ASpace: typeof import('ant-design-vue/es')['Space'];
     ATable: typeof import('ant-design-vue/es')['Table'];
+    ATextarea: typeof import('ant-design-vue/es')['Textarea'];
     ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
-    ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];
+    CaretRightOutlined: typeof import('@ant-design/icons-vue')['CaretRightOutlined'];
+    ChannelAddDrawer: typeof import('./src/components/ChannelAddDrawer.vue')['default'];
     HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled'];
+    MessageAddDrawer: typeof import('./src/components/MessageAddDrawer.vue')['default'];
+    MessageItem: typeof import('./src/components/MessageItem.vue')['default'];
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
+    PlusOutlined: typeof import('@ant-design/icons-vue')['PlusOutlined'];
+    ShrinkOutlined: typeof import('@ant-design/icons-vue')['ShrinkOutlined'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
   }
 }

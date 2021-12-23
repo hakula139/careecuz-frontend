@@ -6,3 +6,27 @@
 svg {
   vertical-align: initial;
 }
+
+@layer components {
+  .ant-form .ant-form-item {
+    input {
+      @apply text-2xl h-14;
+    }
+
+    textarea {
+      @apply text-lg;
+    }
+
+    .ant-input-clear-icon svg {
+      @apply text-lg;
+    }
+  }
+
+  .ant-comment .ant-comment-content-author {
+    @apply justify-between;
+  }
+
+  .ant-drawer .ant-drawer-content-wrapper {
+    @apply transition-all duration-300;
+  }
+}
