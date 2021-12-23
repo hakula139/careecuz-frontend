@@ -23,11 +23,13 @@ declare module 'vue' {
     ASkeleton: typeof import('ant-design-vue/es')['Skeleton'];
     ASpace: typeof import('ant-design-vue/es')['Space'];
     ATable: typeof import('ant-design-vue/es')['Table'];
+    ATextarea: typeof import('ant-design-vue/es')['Textarea'];
     ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
     CaretRightOutlined: typeof import('@ant-design/icons-vue')['CaretRightOutlined'];
-    ChannelAddButton: typeof import('./src/components/ChannelAddButton.vue')['default'];
+    ChannelAddDrawer: typeof import('./src/components/ChannelAddDrawer.vue')['default'];
     HeartFilled: typeof import('@ant-design/icons-vue')['HeartFilled'];
+    MessageAddDrawer: typeof import('./src/components/MessageAddDrawer.vue')['default'];
     MessageItem: typeof import('./src/components/MessageItem.vue')['default'];
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];

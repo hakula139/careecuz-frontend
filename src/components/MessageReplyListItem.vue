@@ -1,5 +1,5 @@
 <template>
-  <a-comment @click="() => {}">
+  <a-comment @click="onMessageClick">
     <template #author>
       <a-space>
         <span>{{ getUsername(data.user.userId) }}</span>
@@ -27,26 +27,24 @@
 <script setup lang="ts">
 // #region imports
 
-import { reactive } from 'vue';
-
 import { getRelativeTime, getUsername } from '@/composables';
-import { Message, MessageForm } from '@/types';
+import { Message } from '@/types';
 
 // #endregion
 
-defineProps<{
+const props = defineProps<{
   data: Message;
 }>();
 
-// #region reply drawer
+const emit = defineEmits<{
+  (event: 'addMessage', replyTo: number): void;
+}>();
 
-const replyDrawer = reactive({
-  visible: false,
-  data: {
-    content: '',
-    replyTo: 0,
-  } as MessageForm,
-});
+// #region reply list item
+
+const onMessageClick = (): void => {
+  emit('addMessage', props.data.id);
+};
 
 // #endregion
 </script>

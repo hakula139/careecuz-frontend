@@ -4,7 +4,14 @@
       class="px-4 py-6 md:px-0"
       size="middle"
     >
-      <channel-add-button />
+      <a-button
+        type="primary"
+        size="large"
+        @click="channelAddDrawerRef?.openChannelAddDrawer()"
+      >
+        创建频道
+      </a-button>
+
       <a-button
         size="large"
         @click="reload"
@@ -48,20 +55,22 @@
     </a-table>
   </div>
 
+  <channel-add-drawer ref="channelAddDrawerRef" />
+
   <page-footer />
 </template>
 
 <script setup lang="ts">
 // #region imports
 
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { ColumnsType } from 'ant-design-vue/es/table';
 
 import { META_INFO, TIMEOUT } from '@/configs';
 import { getRelativeTime, inject, openMessage } from '@/composables';
-import { ChannelSummary, GetChannelsResp } from '@/types';
+import { ChannelAddDrawerExposed, ChannelSummary, GetChannelsResp } from '@/types';
 import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
@@ -135,6 +144,12 @@ const customRow = (record: ChannelSummary) => ({
     });
   },
 });
+
+// #endregion
+
+// #region channel add drawer
+
+const channelAddDrawerRef = ref<ChannelAddDrawerExposed>();
 
 // #endregion
 

@@ -1,23 +1,15 @@
 <template>
-  <a-button
-    type="primary"
-    size="large"
-    @click="openChannelDrawer"
-  >
-    创建频道
-  </a-button>
-
   <a-drawer
     placement="bottom"
-    :visible="channelDrawer.visible"
+    :visible="channelAddDrawer.visible"
     :body-style="{ padding: 0 }"
     size="large"
-    @close="closeChannelDrawer"
+    @close="closeChannelAddDrawer"
   >
     <template #extra>
       <a-button
         type="primary"
-        :loading="channelDrawer.loading"
+        :loading="channelAddDrawer.loading"
         size="large"
         @click="onAddChannelClick"
       >
@@ -25,14 +17,14 @@
       </a-button>
     </template>
     <a-form
-      :model="channelDrawer.data"
+      :model="channelAddDrawer.data"
       :wrapper-col="{ span: 24 }"
       hide-required-mark
       scroll-to-first-error
     >
       <a-form-item>
         <a-input
-          v-model:value="channelDrawer.data.name"
+          v-model:value="channelAddDrawer.data.name"
           class="form-entry"
           placeholder="请输入频道名称"
           allow-clear
@@ -63,9 +55,9 @@ const { useForm } = Form;
 
 // #endregion
 
-// #region channel drawer
+// #region channel add drawer
 
-const channelDrawer = reactive({
+const channelAddDrawer = reactive({
   visible: false,
   loading: false,
   data: {
@@ -84,20 +76,20 @@ const channelFormRules = reactive({
   ],
 });
 
-const { clearValidate, validate } = useForm(channelDrawer.data, channelFormRules);
+const { clearValidate, validate } = useForm(channelAddDrawer.data, channelFormRules);
 
-const openChannelDrawer = (): void => {
-  channelDrawer.visible = true;
+const openChannelAddDrawer = (): void => {
+  channelAddDrawer.visible = true;
 };
 
-const closeChannelDrawer = (): void => {
-  channelDrawer.visible = false;
+const closeChannelAddDrawer = (): void => {
+  channelAddDrawer.visible = false;
   clearValidate();
 };
 
 const onAddChannelResp = (resp: AddChannelResp): void => {
-  channelDrawer.visible = false;
-  channelDrawer.loading = false;
+  channelAddDrawer.visible = false;
+  channelAddDrawer.loading = false;
   if (resp.code === 200) {
     console.log('channel id:', resp.id);
     router.push({
@@ -113,14 +105,14 @@ const onAddChannelResp = (resp: AddChannelResp): void => {
 socket.on('addChannelResp', onAddChannelResp);
 
 const addChannel = (): void => {
-  channelDrawer.loading = true;
+  channelAddDrawer.loading = true;
   socket.timeout(TIMEOUT).emit(
     'addChannelReq',
     {
-      data: channelDrawer.data,
+      data: channelAddDrawer.data,
     } as AddChannelReq,
     (err: Error): void => {
-      channelDrawer.loading = false;
+      channelAddDrawer.loading = false;
       if (err) openMessage('error', '请求超时');
       // FIXME: remove mock data
       onAddChannelResp(mockAddChannelResp);
@@ -140,4 +132,8 @@ const onAddChannelClick = (): void => {
 };
 
 // #endregion
+
+defineExpose({
+  openChannelAddDrawer,
+});
 </script>

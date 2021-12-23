@@ -24,28 +24,32 @@
           :data-source="replyDrawer.data.replies"
         >
           <template #renderItem="{ item }">
-            <message-reply-list-item :data="item" />
+            <message-reply-list-item
+              :data="item"
+              @add-message="onAddMessageEmit"
+            />
           </template>
         </a-list>
       </a-card>
     </a-skeleton>
   </a-drawer>
+
+  <message-add-drawer ref="messageAddDrawerRef" />
 </template>
 
 <script setup lang="ts">
 // #region imports
 
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage } from '@/composables';
 import {
-  GetMessageReq, GetMessageResp, Message, User,
+  GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, User,
 } from '@/types';
 import { getMockGetMessageResp } from '@/api/mock';
-import MessageReplyListItem from '@/components/MessageReplyListItem.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -116,6 +120,16 @@ const getMessage = (): void => {
       onGetMessageResp(getMockGetMessageResp());
     },
   );
+};
+
+// #endregion
+
+// #region message add drawer
+
+const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
+
+const onAddMessageEmit = (replyTo: number): void => {
+  messageAddDrawerRef.value?.openMessageAddDrawer(replyTo);
 };
 
 // #endregion

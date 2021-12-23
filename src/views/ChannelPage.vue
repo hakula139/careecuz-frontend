@@ -21,10 +21,7 @@
       </template>
 
       <template #header>
-        <div
-          ref="containerHeaderRef"
-          class="flex justify-center"
-        >
+        <div class="flex justify-center">
           <a-button
             v-show="channelPage.messages.length > 0"
             :loading="channelPage.loading"

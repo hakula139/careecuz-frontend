@@ -1,6 +1,8 @@
 import { mock } from 'mockjs';
 
-import { GetHistoryMessagesResp, GetMessageResp, PushNewMessage } from '@/types';
+import {
+  AddMessageResp, GetHistoryMessagesResp, GetMessageResp, PushNewMessage,
+} from '@/types';
 import { mockDatetimeTemplate } from './datetime';
 import { mockRespTemplate } from './response';
 import { mockUserTemplate } from './user';
@@ -45,3 +47,8 @@ export const getMockGetMessageResp = (): GetMessageResp =>
     ...mockRespTemplate,
     data: mockMessageTemplate,
   });
+
+export const mockAddMessageResp: AddMessageResp = mock({
+  ...mockRespTemplate,
+  id: '@integer(1, 1000)',
+});
