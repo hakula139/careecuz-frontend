@@ -11,7 +11,10 @@
       active
       :paragraph="{ rows: 4 }"
     >
-      <message-item :data="replyDrawer.data" />
+      <message-item
+        :data="replyDrawer.data"
+        @add-message="onAddMessageEmit"
+      />
 
       <a-card
         :title="`${replyDrawer.data.replies.length} 个回复`"
@@ -24,7 +27,7 @@
           :data-source="replyDrawer.data.replies"
         >
           <template #renderItem="{ item }">
-            <message-reply-list-item
+            <message-item
               :data="item"
               @add-message="onAddMessageEmit"
             />
@@ -129,6 +132,7 @@ const getMessage = (): void => {
 const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
 
 const onAddMessageEmit = (replyTo: number): void => {
+  console.log('emit', replyTo);
   messageAddDrawerRef.value?.openMessageAddDrawer(replyTo);
 };
 

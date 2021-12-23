@@ -33,7 +33,6 @@ declare module 'vue' {
     MessageItem: typeof import('./src/components/MessageItem.vue')['default'];
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
-    MessageReplyListItem: typeof import('./src/components/MessageReplyListItem.vue')['default'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
   }
