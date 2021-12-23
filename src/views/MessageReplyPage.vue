@@ -13,7 +13,7 @@
     >
       <message-item
         :data="replyDrawer.data"
-        @add-message="onAddMessageEmit"
+        @add-message="openMessageAddDrawer"
       />
 
       <a-card
@@ -29,7 +29,7 @@
           <template #renderItem="{ item }">
             <message-item
               :data="item"
-              @add-message="onAddMessageEmit"
+              @add-message="openMessageAddDrawer"
             />
           </template>
         </a-list>
@@ -131,8 +131,7 @@ const getMessage = (): void => {
 
 const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
 
-const onAddMessageEmit = (replyTo: number): void => {
-  console.log('emit', replyTo);
+const openMessageAddDrawer = (replyTo: number): void => {
   messageAddDrawerRef.value?.openMessageAddDrawer(replyTo);
 };
 

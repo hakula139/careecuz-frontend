@@ -9,7 +9,6 @@
       <a-button
         type="primary"
         :loading="messageAddDrawer.loading"
-        size="large"
         @click="onAddMessageClick"
       >
         发表评论
@@ -24,8 +23,11 @@
       <a-form-item>
         <a-textarea
           v-model:value="messageAddDrawer.data.content"
+          class="text-xl"
           :placeholder="messageAddDrawer.placeHolder()"
-          :auto-size="{ minRows: 2, maxRows: 5 }"
+          size="large"
+          :auto-size="{ minRows: 5, maxRows: 5 }"
+          :bordered="false"
         />
       </a-form-item>
     </a-form>
@@ -36,7 +38,6 @@
 // #region imports
 
 import { reactive } from 'vue';
-import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { Form } from 'ant-design-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
@@ -46,7 +47,6 @@ import { inject, openMessage } from '@/composables';
 import { AddMessageReq, AddMessageResp, MessageForm } from '@/types';
 import { mockAddMessageResp } from '@/api/mock';
 
-const router = useRouter();
 const socket = inject<Socket>('socket');
 const { useForm } = Form;
 
@@ -76,7 +76,7 @@ const messageFormRules = reactive({
   ],
 });
 
-const { clearValidate, validate } = useForm(messageAddDrawer.data, messageFormRules);
+const { clearValidate, resetFields, validate } = useForm(messageAddDrawer.data, messageFormRules);
 
 const openMessageAddDrawer = (replyTo: number): void => {
   messageAddDrawer.data.replyTo = replyTo;
@@ -92,14 +92,11 @@ const onAddMessageResp = (resp: AddMessageResp): void => {
   messageAddDrawer.visible = false;
   messageAddDrawer.loading = false;
   if (resp.code === 200) {
-    console.log('channel id:', resp.id);
-    router.push({
-      name: 'MessagePage',
-      params: { channelId: resp.id },
-    });
+    console.log('message id:', resp.id);
+    resetFields();
   } else {
-    console.log('failed to add channel:', resp.message);
-    openMessage('error', '创建失败');
+    console.log('failed to add message:', resp.message);
+    openMessage('error', '发表失败');
   }
 };
 
@@ -138,6 +135,6 @@ const onAddMessageClick = (): void => {
 // #endregion
 
 defineExpose({
-  openMessageDrawer: openMessageAddDrawer,
+  openMessageAddDrawer,
 });
 </script>

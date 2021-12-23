@@ -2,7 +2,7 @@
   <a-comment class="p-3 bg-white rounded-2xl">
     <template #actions>
       <a-space size="middle">
-        <a-button @click="$router.push({ name: 'MessageReplyPage', params: { channelId, messageId: data.id } })">
+        <a-button @click="openReplyPage">
           <template #icon>
             <message-outlined />
           </template>
@@ -24,7 +24,9 @@
       </a-avatar>
     </template>
     <template #content>
-      <p>{{ data.content }}</p>
+      <div @click="openReplyPage">
+        <p>{{ data.content }}</p>
+      </div>
     </template>
     <template #datetime>
       <a-tooltip :title="data.time">
@@ -37,13 +39,31 @@
 <script setup lang="ts">
 // #region imports
 
+import { useRouter } from 'vue-router';
+
 import { getRelativeTime, getUsername } from '@/composables';
 import { MessageSummary } from '@/types';
 
+const router = useRouter();
+
 // #endregion
 
-defineProps<{
+const props = defineProps<{
   channelId: number;
   data: MessageSummary;
 }>();
+
+// #region message list item
+
+const openReplyPage = (): void => {
+  router.push({
+    name: 'MessageReplyPage',
+    params: {
+      channelId: props.channelId,
+      messageId: props.data.id,
+    },
+  });
+};
+
+// #endregion
 </script>
