@@ -20,6 +20,7 @@ declare module 'vue' {
     AList: typeof import('ant-design-vue/es')['List'];
     AListItem: typeof import('ant-design-vue/es')['ListItem'];
     APageHeader: typeof import('ant-design-vue/es')['PageHeader'];
+    ArrowsAltOutlined: typeof import('@ant-design/icons-vue')['ArrowsAltOutlined'];
     ASkeleton: typeof import('ant-design-vue/es')['Skeleton'];
     ASpace: typeof import('ant-design-vue/es')['Space'];
     ATable: typeof import('ant-design-vue/es')['Table'];
@@ -34,6 +35,7 @@ declare module 'vue' {
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
+    ShrinkOutlined: typeof import('@ant-design/icons-vue')['ShrinkOutlined'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
   }
 }

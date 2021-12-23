@@ -2,17 +2,30 @@
   <a-drawer
     placement="bottom"
     :visible="messageAddDrawer.visible"
+    :height="messageAddDrawer.height()"
     :body-style="{ padding: 0 }"
     @close="closeMessageAddDrawer"
   >
     <template #extra>
-      <a-button
-        type="primary"
-        :loading="messageAddDrawer.loading"
-        @click="onAddMessageClick"
-      >
-        发表评论
-      </a-button>
+      <a-space size="middle">
+        <a-button
+          type="text"
+          shape="circle"
+          @click="toggleMessageAddDrawerHeight"
+        >
+          <template #icon>
+            <shrink-outlined v-if="messageAddDrawer.fullscreen" />
+            <arrows-alt-outlined v-else />
+          </template>
+        </a-button>
+        <a-button
+          type="primary"
+          :loading="messageAddDrawer.loading"
+          @click="onAddMessageClick"
+        >
+          发表评论
+        </a-button>
+      </a-space>
     </template>
     <a-form
       :model="messageAddDrawer.data"
@@ -23,10 +36,8 @@
       <a-form-item>
         <a-textarea
           v-model:value="messageAddDrawer.data.content"
-          class="text-xl"
           :placeholder="messageAddDrawer.placeHolder()"
-          size="large"
-          :auto-size="{ minRows: 5, maxRows: 5 }"
+          auto-size
           :bordered="false"
         />
       </a-form-item>
@@ -61,6 +72,8 @@ const emit = defineEmits<{
 const messageAddDrawer = reactive({
   visible: false,
   loading: false,
+  fullscreen: false,
+  height: (): string => (messageAddDrawer.fullscreen ? '100%' : '300px'),
   placeHolder: (): string =>
     (messageAddDrawer.data.replyTo ? `回复 #${messageAddDrawer.data.replyTo}` : '发条友善的评论吧～'),
   data: {
@@ -90,6 +103,10 @@ const openMessageAddDrawer = (replyTo: number): void => {
 const closeMessageAddDrawer = (): void => {
   messageAddDrawer.visible = false;
   clearValidate();
+};
+
+const toggleMessageAddDrawerHeight = (): void => {
+  messageAddDrawer.fullscreen = !messageAddDrawer.fullscreen;
 };
 
 const onAddMessageResp = (resp: AddMessageResp): void => {

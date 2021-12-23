@@ -3,7 +3,6 @@
     placement="bottom"
     :visible="channelAddDrawer.visible"
     :body-style="{ padding: 0 }"
-    size="large"
     @close="closeChannelAddDrawer"
   >
     <template #extra>
@@ -25,7 +24,6 @@
       <a-form-item>
         <a-input
           v-model:value="channelAddDrawer.data.name"
-          class="form-entry"
           placeholder="请输入频道名称"
           allow-clear
           :bordered="false"

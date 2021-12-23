@@ -2,7 +2,7 @@
   <a-drawer
     placement="bottom"
     :visible="replyDrawer.visible"
-    size="large"
+    height="100%"
     @close="closeReplyDrawer"
   >
     <a-skeleton
