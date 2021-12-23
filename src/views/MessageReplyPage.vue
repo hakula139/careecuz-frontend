@@ -40,11 +40,7 @@
 
   <message-add-drawer
     ref="messageAddDrawerRef"
-    @done="
-      () => {
-        if (listBottomRef) scrollIntoView(listBottomRef);
-      }
-    "
+    @done="listScrollToBottom"
   />
 </template>
 
@@ -68,7 +64,15 @@ const socket = inject<Socket>('socket');
 
 // #endregion
 
+// #region scroll to bottom
+
 const listBottomRef = ref<HTMLDivElement>();
+
+const listScrollToBottom = (): void => {
+  if (listBottomRef.value) scrollIntoView(listBottomRef.value);
+};
+
+// #endregion
 
 // #region reply drawer
 

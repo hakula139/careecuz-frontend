@@ -41,11 +41,7 @@
     <a-button
       shape="circle"
       size="large"
-      @click="
-        () => {
-          if (containerRef) scrollToPosition(containerRef, 0);
-        }
-      "
+      @click="containerScrollToBottom"
     >
       <template #icon>
         <caret-down-outlined />
@@ -85,7 +81,15 @@ const socket = inject<Socket>('socket');
 
 // #endregion
 
+// #region scroll to bottom
+
 const containerRef = ref<HTMLDivElement>();
+
+const containerScrollToBottom = (): void => {
+  if (containerRef.value) scrollToPosition(containerRef.value, 0);
+};
+
+// #endregion
 
 // #region channel page
 
@@ -170,9 +174,7 @@ const onPushNewMessage = (resp: PushNewMessage): void => {
   const prevIsAtBottom = containerRef.value ? isAtBottom(containerRef.value) : true;
   channelPage.messages.push(resp.data);
   nextTick((): void => {
-    if (containerRef.value && prevIsAtBottom) {
-      scrollToPosition(containerRef.value, 0);
-    }
+    if (prevIsAtBottom) containerScrollToBottom();
   });
 };
 
