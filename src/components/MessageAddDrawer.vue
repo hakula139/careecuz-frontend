@@ -38,6 +38,7 @@
           v-model:value="messageAddDrawer.data.content"
           :placeholder="messageAddDrawer.placeHolder()"
           auto-size
+          size="large"
           :bordered="false"
         />
       </a-form-item>
