@@ -1,11 +1,11 @@
 import { createApp } from 'vue';
 
-import { VITE_API_URL } from '@/configs';
+import { PROD, VITE_API_URL } from '@/configs';
 import App from '@/App.vue';
 import router from '@/router';
 import { store, key } from '@/store';
 import io, { SocketIOPluginOptions } from '@/plugins/vueSocketIO';
-import '@/assets/css/index.css';
+import '@/assets/index.css';
 
 const app = createApp(App);
 
@@ -16,6 +16,7 @@ app
     uri: VITE_API_URL,
     opts: {
       reconnection: true,
+      secure: PROD,
     },
   } as SocketIOPluginOptions);
 

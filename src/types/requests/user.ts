@@ -1,8 +1,5 @@
-export interface UserLoginReq {
-  username: string;
-  password: string;
-}
+import { UserForm } from '../user';
 
-export interface UserRegisterReq extends UserLoginReq {
-  email: string;
+export interface UserLoginReq {
+  data: UserForm;
 }

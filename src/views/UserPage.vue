@@ -5,7 +5,7 @@
   />
 
   <div class="flex justify-center p-6 h-full-content">
-    <div class="flex flex-col items-center justify-between">
+    <div class="flex flex-col justify-between">
       <a-space
         class="items-center"
         direction="vertical"
@@ -69,9 +69,3 @@ const logout = (): void => {
 
 // #endregion
 </script>
-
-<style scoped>
-.button-lg {
-  @apply h-12 w-36 text-lg;
-}
-</style>

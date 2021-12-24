@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.html, .body, #app {
+.html,
+.body,
+#app {
   @apply h-full;
 }
 
@@ -11,19 +13,20 @@ svg {
   vertical-align: initial;
 }
 
+.ant-comment .ant-comment-content-author {
+  @apply justify-between;
+}
+
+.ant-drawer .ant-drawer-content-wrapper {
+  @apply transition-all duration-300;
+}
+
 .ant-form .ant-form-item {
-  input {
-    @apply text-2xl h-14;
-  }
-
-  textarea {
-    @apply text-lg;
-  }
-
-  .ant-input-clear-icon svg {
-    @apply text-lg;
+  .ant-input-prefix {
+    @apply mr-3;
   }
 }
+
 .ant-layout-header {
   @apply sticky top-0 z-50 flex items-center justify-between p-0;
 
@@ -32,6 +35,10 @@ svg {
   }
 
   .text-title {
-    @apply text-2xl text-white ;
+    @apply text-2xl text-white;
   }
+}
+
+#app .button-lg {
+  @apply h-10 max-w-md text-lg w-60 min-w-max;
 }

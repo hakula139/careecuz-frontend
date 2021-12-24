@@ -1,5 +1,5 @@
 import { message } from 'ant-design-vue';
-import 'ant-design-vue/lib/message/style/index.less';
+import 'ant-design-vue/lib/message/style/index.css';
 
 import { NoticeType } from '@/types';
 
