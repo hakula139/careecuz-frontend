@@ -2,7 +2,7 @@
   <a-comment>
     <template #author>
       <a-space>
-        <span>{{ getUsername(data.user.userId) }}</span>
+        <span>{{ username }}</span>
         <span>#{{ data.id }}</span>
         <caret-right-outlined v-if="data.replyTo" />
         <span v-if="data.replyTo">#{{ data.replyTo }}</span>
@@ -10,7 +10,7 @@
     </template>
     <template #avatar>
       <a-avatar size="large">
-        {{ getUsername(data.user.userId)[0] }}
+        {{ username[0] }}
       </a-avatar>
     </template>
     <template #content>
@@ -29,6 +29,8 @@
 <script setup lang="ts">
 // #region imports
 
+import { computed } from 'vue';
+
 import { getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
 
@@ -43,6 +45,8 @@ const emit = defineEmits<{
 }>();
 
 // #region message item
+
+const username = computed(() => getUsername(props.data.user.userId));
 
 const onMessageClick = (): void => {
   emit('addMessage', props.data.id);

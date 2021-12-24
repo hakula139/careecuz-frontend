@@ -6,6 +6,7 @@ const RootLayout = () => import(/* webpackChunkName: "root-layout" */ '@/views/R
 const ChannelPage = () => import(/* webpackChunkName: "channel-page" */ '@/views/ChannelPage.vue');
 const ChannelList = () => import(/* webpackChunkName: "channel-list" */ '@/views/ChannelList.vue');
 const MessageReplyPage = () => import(/* webpackChunkName: "message-reply-page" */ '@/views/MessageReplyPage.vue');
+const UserPage = () => import(/* webpackChunkName: "user-page" */ '@/views/UserPage.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,6 +30,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'channels',
         name: 'ChannelList',
         component: ChannelList,
+      },
+      {
+        path: 'user/:userId',
+        name: 'UserPage',
+        component: UserPage,
+      },
+      {
+        path: 'profile',
+        name: 'MyProfile',
+        component: UserPage,
       },
     ],
   },

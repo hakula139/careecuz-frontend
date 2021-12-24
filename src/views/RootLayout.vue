@@ -1,7 +1,20 @@
 <template>
   <a-layout class="w-full h-full overflow-y-auto">
-    <a-layout-header class="sticky top-0 z-50 flex items-center justify-center">
-      <span class="text-2xl text-white">{{ META_INFO.TITLE }}</span>
+    <a-layout-header class="sticky top-0 z-50 flex items-center justify-between px-4">
+      <a-button type="text">
+        <template #icon>
+          <bell-outlined class="text-header" />
+        </template>
+      </a-button>
+      <span class="text-header">{{ META_INFO.TITLE }}</span>
+      <a-button
+        type="text"
+        @click="$router.push({ name: 'MyProfile' })"
+      >
+        <template #icon>
+          <user-outlined class="text-header" />
+        </template>
+      </a-button>
     </a-layout-header>
     <a-layout-content>
       <router-view />
@@ -16,3 +29,9 @@ import { META_INFO } from '@/configs';
 
 // #endregion
 </script>
+
+<style scoped>
+.text-header {
+  @apply text-2xl text-white;
+}
+</style>

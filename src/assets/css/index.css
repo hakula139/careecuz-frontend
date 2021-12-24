@@ -24,11 +24,14 @@ svg {
     @apply text-lg;
   }
 }
+.ant-layout-header {
+  @apply sticky top-0 z-50 flex items-center justify-between p-0;
 
-.ant-comment .ant-comment-content-author {
-  @apply justify-between;
-}
+  .anticon {
+    @apply text-xl text-white;
+  }
 
-.ant-drawer .ant-drawer-content-wrapper {
-  @apply transition-all duration-300;
+  .text-title {
+    @apply text-2xl text-white ;
+  }
 }

@@ -26,6 +26,7 @@ declare module 'vue' {
     ATable: typeof import('ant-design-vue/es')['Table'];
     ATextarea: typeof import('ant-design-vue/es')['Textarea'];
     ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
+    BellOutlined: typeof import('@ant-design/icons-vue')['BellOutlined'];
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined'];
     CaretRightOutlined: typeof import('@ant-design/icons-vue')['CaretRightOutlined'];
     ChannelAddDrawer: typeof import('./src/components/ChannelAddDrawer.vue')['default'];
@@ -38,6 +39,7 @@ declare module 'vue' {
     PlusOutlined: typeof import('@ant-design/icons-vue')['PlusOutlined'];
     ShrinkOutlined: typeof import('@ant-design/icons-vue')['ShrinkOutlined'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
+    UserOutlined: typeof import('@ant-design/icons-vue')['UserOutlined'];
   }
 }
 
