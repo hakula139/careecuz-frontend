@@ -77,7 +77,7 @@ const messageAddDrawer = reactive({
   visible: false,
   loading: false,
   fullscreen: false,
-  height: (): string => (messageAddDrawer.fullscreen ? '100%' : '300px'),
+  height: (): string => (messageAddDrawer.fullscreen ? '100%' : '200px'),
   placeHolder: (): string =>
     (messageAddDrawer.data.replyTo ? `回复 #${messageAddDrawer.data.replyTo}` : '发条友善的评论吧～'),
   data: {
