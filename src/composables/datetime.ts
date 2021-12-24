@@ -6,8 +6,10 @@ const week = day * 7;
 const month = day * 30.5;
 const year = day * 365;
 
+const parseDatetime = (time: string) => (time.endsWith('Z') ? time : `${time.replace(' ', 'T')}Z`);
+
 export const getRelativeTime = (time: string): string => {
-  let elapsed = new Date(time).getTime() - Date.now();
+  let elapsed = new Date(parseDatetime(time)).getTime() - Date.now();
   const postfix = elapsed <= 0 ? '前' : '后';
   elapsed = Math.abs(elapsed);
 
