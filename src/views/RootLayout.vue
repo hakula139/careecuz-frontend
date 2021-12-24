@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="w-full h-screen overflow-y-auto">
+  <a-layout class="w-full h-full overflow-y-auto">
     <a-layout-header class="sticky top-0 z-50 flex items-center justify-center">
       <span class="text-2xl text-white">{{ META_INFO.TITLE }}</span>
     </a-layout-header>

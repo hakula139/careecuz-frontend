@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.html, .body, #app {
+  @apply h-full;
+}
+
 /* Override base SVG style to avoid clashes with Ant Design */
 svg {
   vertical-align: initial;
