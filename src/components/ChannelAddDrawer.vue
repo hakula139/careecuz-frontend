@@ -26,6 +26,7 @@
           v-model:value="channelAddDrawer.data.name"
           placeholder="请输入频道名称"
           allow-clear
+          size="large"
           :bordered="false"
         />
       </a-form-item>

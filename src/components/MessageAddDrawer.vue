@@ -38,6 +38,7 @@
           v-model:value="messageAddDrawer.data.content"
           :placeholder="messageAddDrawer.placeHolder()"
           auto-size
+          size="large"
           :bordered="false"
         />
       </a-form-item>
@@ -55,9 +56,11 @@ import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage } from '@/composables';
+import { useStore } from '@/store';
 import { AddMessageReq, AddMessageResp, MessageForm } from '@/types';
 import { mockAddMessageResp } from '@/api/mock';
 
+const store = useStore();
 const socket = inject<Socket>('socket');
 const { useForm } = Form;
 
@@ -77,7 +80,7 @@ const messageAddDrawer = reactive({
   visible: false,
   loading: false,
   fullscreen: false,
-  height: (): string => (messageAddDrawer.fullscreen ? '100%' : '300px'),
+  height: (): string => (messageAddDrawer.fullscreen ? '100%' : '200px'),
   placeHolder: (): string =>
     (messageAddDrawer.data.replyTo ? `回复 #${messageAddDrawer.data.replyTo}` : '发条友善的评论吧～'),
   data: {
@@ -134,9 +137,8 @@ const addMessage = (): void => {
   socket.timeout(TIMEOUT).emit(
     'addMessageReq',
     {
-      // TODO: implement login, store userId and userToken into Vuex
-      userId: '',
-      userToken: '',
+      userId: store.state.userId,
+      userToken: store.state.userToken,
       channelId: props.channelId,
       data: messageAddDrawer.data,
     } as AddMessageReq,

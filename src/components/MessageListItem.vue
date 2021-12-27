@@ -16,11 +16,11 @@
       </a-space>
     </template>
     <template #author>
-      <span>{{ getUsername(data.user.userId) }}</span>
+      <span>{{ username }}</span>
     </template>
     <template #avatar>
       <a-avatar size="large">
-        {{ getUsername(data.user.userId)[0] }}
+        {{ username[0] }}
       </a-avatar>
     </template>
     <template #content>
@@ -39,6 +39,7 @@
 <script setup lang="ts">
 // #region imports
 
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { getRelativeTime, getUsername } from '@/composables';
@@ -54,6 +55,8 @@ const props = defineProps<{
 }>();
 
 // #region message list item
+
+const username = computed(() => getUsername(props.data.user.userId));
 
 const openReplyPage = (): void => {
   router.push({

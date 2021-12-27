@@ -1,13 +1,5 @@
-import { ChannelForm } from './channel';
-import { MessageForm } from './message';
-
-export interface GetChannelReq {
-  id: number;
-}
-
-export interface AddChannelReq {
-  data: ChannelForm;
-}
+import { GetChannelReq } from './channel';
+import { MessageForm } from '../message';
 
 export interface GetHistoryMessagesReq extends GetChannelReq {
   lastMessageId?: number;

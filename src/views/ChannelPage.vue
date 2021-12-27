@@ -3,9 +3,10 @@
     :title="channelPage.info.name"
     @back="$router.push({ name: 'ChannelList' })"
   />
+
   <div
     ref="containerRef"
-    class="content-container"
+    class="p-3 pt-0 overflow-y-auto h-full-content"
   >
     <a-list
       item-layout="horizontal"
@@ -230,10 +231,3 @@ onUnmounted((): void => {
   clearInterval(intervalHandler);
 });
 </script>
-
-<style scoped>
-.content-container {
-  @apply p-3 pt-0 overflow-y-auto;
-  height: calc(100% - 72px);
-}
-</style>
