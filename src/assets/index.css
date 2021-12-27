@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.html,
+.body,
+#app {
+  @apply h-full;
+}
+
+/* Override base SVG style to avoid clashes with Ant Design */
+svg {
+  vertical-align: initial;
+}
+
+.ant-comment .ant-comment-content-author {
+  @apply justify-between;
+}
+
+.ant-drawer .ant-drawer-content-wrapper {
+  @apply transition-all duration-300;
+}
+
+.ant-form .ant-form-item {
+  .ant-input-prefix {
+    @apply mr-3;
+  }
+}
+
+.ant-layout-header {
+  @apply sticky top-0 z-50 flex items-center justify-between p-0;
+
+  .anticon {
+    @apply text-xl text-white;
+  }
+
+  .text-title {
+    @apply text-2xl text-white;
+  }
+}
+
+#app .button-lg {
+  @apply h-10 max-w-md text-lg w-60 min-w-max;
+}
