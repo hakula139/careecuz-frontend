@@ -1,7 +1,7 @@
 import { mock } from 'mockjs';
 
 import { UserLoginResp } from '@/types';
-import { mockRespTemplate } from './response';
+import { mockResp, mockRespTemplate } from './response';
 
 export const mockUserTemplate = {
   userId: '@guid',
@@ -21,4 +21,6 @@ export const mockUserRegisterRequiredResp: UserLoginResp = mock({
   token: '@string(20)',
 });
 
-export const mockUserRegisterResp: UserLoginResp = mockUserLoginResp;
+export const mockUserRegisterResp = mockUserLoginResp;
+
+export const mockSendVerifyCodeResp = mockResp;

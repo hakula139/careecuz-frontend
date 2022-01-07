@@ -9,55 +9,71 @@
       scroll-to-first-error
     >
       <a-form-item>
-        <a-row>
-          <a-col :span="14">
-            <a-input
-              v-model:value="userForm.data.email"
-              placeholder="邮箱地址"
-              size="large"
-              allow-clear
-            >
-              <template #prefix>
-                <mail-outlined />
-              </template>
-            </a-input>
-          </a-col>
-          <a-col :span="10">
+        <a-input
+          v-model:value="userForm.data.email"
+          placeholder="邮箱地址"
+          size="large"
+          allow-clear
+        >
+          <template #prefix>
+            <mail-outlined />
+          </template>
+          <template #addonAfter>
             <a-select
               v-model:value="emailDomain.selected"
+              class="w-40"
               placeholder="请选择域名"
               :options="emailDomain.options"
               :filter-option="emailDomain.filterOption"
               size="large"
               show-search
             />
-          </a-col>
-        </a-row>
+          </template>
+        </a-input>
       </a-form-item>
       <a-form-item>
-        <a-input
+        <a-input-password
           v-model:value="userForm.data.password"
           type="password"
           placeholder="密码"
           size="large"
-          allow-clear
         >
           <template #prefix>
             <lock-outlined />
           </template>
-        </a-input>
+        </a-input-password>
       </a-form-item>
       <a-form-item v-if="userForm.isRegisterMode">
-        <a-input
-          v-model:value="userForm.data.verifyCode"
-          placeholder="验证码"
-          size="large"
-          allow-clear
-        >
-          <template #prefix>
-            <key-outlined />
-          </template>
-        </a-input>
+        <a-row :gutter="12">
+          <a-col
+            :xs="15"
+            :sm="18"
+          >
+            <a-input
+              v-model:value="userForm.data.verifyCode"
+              placeholder="验证码"
+              size="large"
+              allow-clear
+            >
+              <template #prefix>
+                <key-outlined />
+              </template>
+            </a-input>
+          </a-col>
+          <a-col
+            :xs="9"
+            :sm="6"
+          >
+            <a-button
+              class="w-full"
+              size="large"
+              :disabled="countdown.value > 0"
+              @click="sendVerifyCode"
+            >
+              {{ countdown.value > 0 ? `${countdown.value} s` : '发送' }}
+            </a-button>
+          </a-col>
+        </a-row>
       </a-form-item>
       <a-form-item>
         <div class="flex justify-center w-full">
@@ -66,9 +82,16 @@
             type="primary"
             @click="onSubmitClick"
           >
-            {{ userForm.isRegisterMode ? '注册' : '登录' }}
+            {{ userForm.isRegisterMode ? '注册' : '注册 / 登录' }}
           </a-button>
         </div>
+      </a-form-item>
+      <a-form-item
+        v-if="!userForm.isRegisterMode"
+        class="opacity-0"
+      >
+        <!-- placeholder -->
+        <a-input size="large" />
       </a-form-item>
     </a-form>
   </div>
@@ -79,19 +102,21 @@
 <script setup lang="ts">
 // #region imports
 
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { Form } from 'ant-design-vue';
-import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
+import { RuleObject, ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 import { OptionData } from 'ant-design-vue/es/vc-select/interface';
 
 import { supportedEmailDomains } from '@/assets/supportedEmailDomains';
-import { META_INFO, TIMEOUT } from '@/configs';
-import { inject, openMessage } from '@/composables';
+import { META_INFO, SEND_VERIFY_CODE_INTERVAL, TIMEOUT } from '@/configs';
+import { Countdown, inject, openMessage } from '@/composables';
 import { useStore } from '@/store';
-import { UserForm, UserLoginReq, UserLoginResp } from '@/types';
-import { mockUserRegisterRequiredResp, mockUserRegisterResp } from '@/api/mock';
+import {
+  Resp, UserForm, UserLoginReq, UserLoginResp,
+} from '@/types';
+import { mockSendVerifyCodeResp, mockUserRegisterRequiredResp, mockUserRegisterResp } from '@/api/mock';
 
 const router = useRouter();
 const store = useStore();
@@ -106,7 +131,7 @@ const emailDomain = reactive({
   selected: undefined as string | undefined,
   options: supportedEmailDomains.map(
     (domain: string): OptionData => ({
-      value: domain,
+      value: `@${domain}`,
     }),
   ),
   filterOption: (input: string, { value }: OptionData): boolean =>
@@ -123,26 +148,46 @@ const userForm = reactive({
   } as UserForm,
 });
 
+const validateEmail = async (_rule: RuleObject, value: string): Promise<void> => {
+  if (!value || !value.trim()) {
+    return Promise.reject(new Error('请输入邮箱地址'));
+  }
+  if (!emailDomain.selected) {
+    return Promise.reject(new Error('请选择邮箱域名'));
+  }
+  return Promise.resolve();
+};
+
+const validatePassword = async (_rule: RuleObject, value: string): Promise<void> => {
+  if (!value) {
+    return Promise.reject(new Error('请输入密码'));
+  }
+  return Promise.resolve();
+};
+
+const validateVerifyCode = async (_rule: RuleObject, value: string): Promise<void> => {
+  if (userForm.isRegisterMode && !value) {
+    return Promise.reject(new Error('请输入验证码'));
+  }
+  return Promise.resolve();
+};
+
 const userFormRules = reactive({
   email: [
     {
-      required: true,
-      message: '请输入邮箱地址',
+      validator: validateEmail,
       trigger: 'blur',
-      whitespace: true,
     },
   ],
   password: [
     {
-      required: true,
-      message: '请输入密码',
+      validator: validatePassword,
       trigger: 'blur',
     },
   ],
   verifyCode: [
     {
-      required: userForm.isRegisterMode,
-      message: '请输入验证码',
+      validator: validateVerifyCode,
       trigger: 'blur',
     },
   ],
@@ -184,7 +229,7 @@ const onUserRegisterResp = (resp: UserLoginResp): void => {
 socket.on('userRegisterResp', onUserRegisterResp);
 
 const parseFormData = ({ email, password, verifyCode }: UserForm): UserForm => ({
-  email: `${email}@${emailDomain.selected}`,
+  email: email + emailDomain.selected,
   password,
   verifyCode,
 });
@@ -220,6 +265,32 @@ const onSubmitClick = (): void => {
       console.log('validate error:', err);
       err.errorFields.forEach((field) => field.errors.forEach((message) => openMessage('warning', message)));
     });
+};
+
+// #endregion
+
+// #region verify code
+
+const countdown = ref(new Countdown(SEND_VERIFY_CODE_INTERVAL));
+
+const onSendVerifyCodeResp = (resp: Resp): void => {
+  if (resp.code === 200) {
+    countdown.value.start();
+  } else {
+    console.log('failed to send verify code:', userForm.data.email, resp.message);
+    openMessage('error', `发送验证码失败: ${resp.message}`);
+  }
+};
+
+socket.on('sendVerifyCodeResp', onSendVerifyCodeResp);
+
+const sendVerifyCode = (): void => {
+  console.log('send verify code', userForm.data.email);
+  socket.timeout(TIMEOUT).emit('sendVerifyCodeReq', (err: Error): void => {
+    if (err) openMessage('error', '请求超时');
+    // FIXME: remove mock data
+    onSendVerifyCodeResp(mockSendVerifyCodeResp);
+  });
 };
 
 // #endregion
