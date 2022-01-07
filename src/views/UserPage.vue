@@ -64,7 +64,7 @@ const username = computed(() => getUsername(userId.value));
 const logout = (): void => {
   store.commit('authReset');
   console.log('logged out');
-  router.go(0);
+  router.push({ name: 'UserLoginPage' });
 };
 
 // #endregion
