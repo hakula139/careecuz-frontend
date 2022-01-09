@@ -2,7 +2,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store, useStore as baseUseStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 
-import { State, UserLoginResp } from '@/types';
+import { State, UserAuthResp } from '@/types';
 
 export const key: InjectionKey<Store<State>> = Symbol('store');
 
@@ -24,7 +24,7 @@ export const store: Store<State> = createStore<State>({
       state.status = 'loading';
     },
 
-    authSuccess: (state, resp: UserLoginResp): void => {
+    authSuccess: (state, resp: UserAuthResp): void => {
       state.status = 'success';
       state.userId = resp.id;
       state.userToken = resp.token;

@@ -1,5 +1,5 @@
 import { UserForm } from '../user';
 
-export interface UserLoginReq {
+export interface UserAuthReq {
   data: UserForm;
 }
