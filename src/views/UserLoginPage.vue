@@ -114,7 +114,7 @@ import { META_INFO, SEND_VERIFY_CODE_INTERVAL, TIMEOUT } from '@/configs';
 import { Countdown, inject, openMessage } from '@/composables';
 import { useStore } from '@/store';
 import {
-  Resp, UserForm, UserLoginReq, UserLoginResp,
+  Resp, UserForm, UserAuthReq, UserAuthResp,
 } from '@/types';
 import { mockSendVerifyCodeResp, mockUserRegisterRequiredResp, mockUserRegisterResp } from '@/api/mock';
 
@@ -195,7 +195,7 @@ const userFormRules = reactive({
 
 const { validate } = useForm(userForm.data, userFormRules);
 
-const onUserLoginResp = (resp: UserLoginResp): void => {
+const onUserLoginResp = (resp: UserAuthResp): void => {
   userForm.loading = false;
   if (resp.code === 200) {
     store.commit('authSuccess', resp);
@@ -211,9 +211,7 @@ const onUserLoginResp = (resp: UserLoginResp): void => {
   }
 };
 
-socket.on('userLoginResp', onUserLoginResp);
-
-const onUserRegisterResp = (resp: UserLoginResp): void => {
+const onUserRegisterResp = (resp: UserAuthResp): void => {
   userForm.loading = false;
   if (resp.code === 200) {
     store.commit('authSuccess', resp);
@@ -226,8 +224,6 @@ const onUserRegisterResp = (resp: UserLoginResp): void => {
   }
 };
 
-socket.on('userRegisterResp', onUserRegisterResp);
-
 const parseFormData = ({ email, password, verifyCode }: UserForm): UserForm => ({
   email: email + emailDomain.selected,
   password,
@@ -239,18 +235,18 @@ const login = (): void => {
   console.log('login:', userForm.data.email);
   store.commit('authLoading');
   socket.timeout(TIMEOUT).emit(
-    userForm.isRegisterMode ? 'userRegisterReq' : 'userLoginReq',
+    userForm.isRegisterMode ? 'user:register' : 'user:login',
     {
       data: parseFormData(userForm.data),
-    } as UserLoginReq,
-    (err: Error): void => {
+    } as UserAuthReq,
+    (err: Error, resp: UserAuthResp): void => {
       userForm.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      if (userForm.isRegisterMode) {
-        onUserRegisterResp(mockUserRegisterResp);
+      if (err) {
+        openMessage('error', '请求超时');
+      } else if (userForm.isRegisterMode) {
+        onUserRegisterResp(resp);
       } else {
-        onUserLoginResp(mockUserRegisterRequiredResp);
+        onUserLoginResp(resp);
       }
     },
   );
