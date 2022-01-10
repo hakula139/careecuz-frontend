@@ -1,13 +1,9 @@
 export class Countdown {
   public value = 0;
 
-  private startValue = 0;
-
   private counterHandler = 0;
 
-  public constructor(startValue: number = 10) {
-    this.startValue = startValue;
-  }
+  public constructor(private startValue: number = 10) {}
 
   public reset(): void {
     clearInterval(this.counterHandler);

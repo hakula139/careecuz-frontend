@@ -26,8 +26,8 @@ export const store: Store<State> = createStore<State>({
 
     authSuccess: (state, resp: UserAuthResp): void => {
       state.status = 'success';
-      state.userId = resp.id;
-      state.userToken = resp.token;
+      state.userId = resp.userId || '';
+      state.userToken = resp.token || '';
     },
 
     authReset: (state) => {

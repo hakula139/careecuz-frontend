@@ -116,7 +116,7 @@ import { useStore } from '@/store';
 import {
   Resp, UserForm, UserAuthReq, UserAuthResp,
 } from '@/types';
-import { mockSendVerifyCodeResp, mockUserRegisterRequiredResp, mockUserRegisterResp } from '@/api/mock';
+import { mockSendVerifyCodeResp } from '@/api/mock';
 
 const router = useRouter();
 const store = useStore();
@@ -199,7 +199,7 @@ const onUserLoginResp = (resp: UserAuthResp): void => {
   userForm.loading = false;
   if (resp.code === 200) {
     store.commit('authSuccess', resp);
-    console.log('user logged in:', resp.id);
+    console.log('user logged in:', resp.userId);
     router.push({ name: 'ChannelList' });
   } else if (resp.code === 100) {
     console.log('user not registered:', userForm.data.email);
@@ -215,7 +215,7 @@ const onUserRegisterResp = (resp: UserAuthResp): void => {
   userForm.loading = false;
   if (resp.code === 200) {
     store.commit('authSuccess', resp);
-    console.log('user registered:', resp.id);
+    console.log('user registered:', resp.userId);
     router.push({ name: 'ChannelList' });
   } else {
     store.commit('authReset');
@@ -281,7 +281,7 @@ const onSendVerifyCodeResp = (resp: Resp): void => {
 socket.on('sendVerifyCodeResp', onSendVerifyCodeResp);
 
 const sendVerifyCode = (): void => {
-  console.log('send verify code', userForm.data.email);
+  console.log('send verify code:', userForm.data.email);
   socket.timeout(TIMEOUT).emit('sendVerifyCodeReq', (err: Error): void => {
     if (err) openMessage('error', '请求超时');
     // FIXME: remove mock data

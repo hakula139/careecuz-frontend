@@ -1,6 +1,6 @@
 import { Resp } from './base';
 
 export interface UserAuthResp extends Resp {
-  id: string;
-  token: string;
+  userId?: string;
+  token?: string;
 }
