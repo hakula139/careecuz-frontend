@@ -8,11 +8,11 @@ import { mockRespTemplate } from './response';
 import { mockUserTemplate } from './user';
 
 const mockMessageBaseTemplate = {
-  'id': '@increment',
+  'id': '@guid',
   'user': mockUserTemplate,
   'content': '@cparagraph',
   'time|1': mockDatetimeTemplate,
-  'replyTo|1': [0, '@integer(1, 10)'],
+  'replyTo|1': [undefined, '@guid'],
 };
 
 export const mockMessagListItemTemplate = {
@@ -50,5 +50,5 @@ export const getMockGetMessageResp = (): GetMessageResp =>
 
 export const mockAddMessageResp: AddMessageResp = mock({
   ...mockRespTemplate,
-  id: '@integer(1, 1000)',
+  id: '@guid',
 });

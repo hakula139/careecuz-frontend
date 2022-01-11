@@ -85,7 +85,7 @@ const messageAddDrawer = reactive({
     (messageAddDrawer.data.replyTo ? `回复 #${messageAddDrawer.data.replyTo}` : '发条友善的评论吧～'),
   data: {
     content: '',
-    replyTo: 0,
+    replyTo: undefined,
   } as MessageForm,
 });
 
@@ -102,7 +102,7 @@ const messageFormRules = reactive({
 
 const { clearValidate, resetFields, validate } = useForm(messageAddDrawer.data, messageFormRules);
 
-const openMessageAddDrawer = (replyTo: number = 0): void => {
+const openMessageAddDrawer = (replyTo?: string): void => {
   messageAddDrawer.data.replyTo = replyTo;
   messageAddDrawer.visible = true;
 };

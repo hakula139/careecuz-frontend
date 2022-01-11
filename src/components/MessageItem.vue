@@ -41,7 +41,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: 'addMessage', replyTo: number): void;
+  (event: 'addMessage', replyTo: string): void;
 }>();
 
 // #region message item

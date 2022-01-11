@@ -10,7 +10,7 @@ export const mockChannelInfoTemplate = {
 
 export const mockChannelListItemTemplate = {
   ...mockChannelInfoTemplate,
-  'id': '@increment',
+  'id': '@guid',
   'replyCount|1': [0, '@integer(1, 1000)'],
   'lastReplyTime|1': mockDatetimeTemplate,
   'isTop': '@boolean',
@@ -28,5 +28,5 @@ export const mockGetChannelResp: GetChannelResp = mock({
 
 export const mockAddChannelResp: AddChannelResp = mock({
   ...mockRespTemplate,
-  id: '@integer(1, 1000)',
+  id: '@guid',
 });

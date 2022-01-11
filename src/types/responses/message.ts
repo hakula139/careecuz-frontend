@@ -14,5 +14,5 @@ export interface GetMessageResp extends Resp {
 }
 
 export interface AddMessageResp extends Resp {
-  id?: number;
+  id?: string;
 }

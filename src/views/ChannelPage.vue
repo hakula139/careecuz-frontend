@@ -173,12 +173,13 @@ const onGetHistoryMessagesResp = (resp: GetHistoryMessagesResp): void => {
   }
 };
 
-const getLastMessageId = (): number => (channelPage.messages.length ? channelPage.messages[0].id : 0);
+const getLastMessageId = (): string | undefined =>
+  (channelPage.messages.length ? channelPage.messages[0].id : undefined);
 
 const getHistoryMessages = (): void => {
   channelPage.loading = true;
   socket.timeout(TIMEOUT).emit(
-    'getHistoryMessagesReq',
+    'messages:get:history',
     {
       id: channelId.value,
       maxMessageCount: MAX_MESSAGE_COUNT,

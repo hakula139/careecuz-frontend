@@ -78,20 +78,20 @@ const listScrollToBottom = (): void => {
 // #region reply drawer
 
 const channelId = computed(() => route.params.channelId as string);
-const messageId = computed(() => parseInt(route.params.messageId as string, 10));
+const messageId = computed(() => route.params.messageId as string);
 
 const replyDrawer = reactive({
   visible: false,
   loading: false,
   data: {
-    id: 0,
+    id: '',
     user: {
       userId: '',
       isBlocked: false,
     } as User,
     content: '',
     time: '',
-    replyTo: 0,
+    replyTo: undefined,
     replies: [] as Message[],
   } as Message,
 });
@@ -146,7 +146,7 @@ const getMessage = (): void => {
 
 const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
 
-const openMessageAddDrawer = (replyTo: number): void => {
+const openMessageAddDrawer = (replyTo?: string): void => {
   messageAddDrawerRef.value?.openMessageAddDrawer(replyTo);
 };
 

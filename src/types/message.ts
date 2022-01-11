@@ -2,11 +2,11 @@ import { User } from './user';
 
 export interface MessageForm {
   content: string;
-  replyTo: number;
+  replyTo?: string;
 }
 
 interface MessageBase extends MessageForm {
-  id: number;
+  id: string;
   user: User;
   time: string;
 }
