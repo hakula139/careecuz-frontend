@@ -137,7 +137,7 @@ socket.on('getMessageResp', onGetMessageResp);
 const getMessage = (): void => {
   replyDrawer.loading = true;
   socket.timeout(TIMEOUT).emit(
-    'getMessageReq',
+    'message:get',
     {
       channelId: channelId.value,
       messageId: messageId.value,

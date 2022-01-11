@@ -56,11 +56,9 @@ import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage } from '@/composables';
-import { useStore } from '@/store';
 import { AddMessageReq, AddMessageResp, MessageForm } from '@/types';
 import { mockAddMessageResp } from '@/api/mock';
 
-const store = useStore();
 const socket = inject<Socket>('socket');
 const { useForm } = Form;
 
@@ -139,10 +137,8 @@ const addMessage = (): void => {
   messageAddDrawer.loading = true;
   console.log('add message:', messageAddDrawer.data);
   socket.timeout(TIMEOUT).emit(
-    'addMessageReq',
+    'message:add',
     {
-      userId: store.state.userId,
-      userToken: store.state.userToken,
       channelId: props.channelId,
       data: messageAddDrawer.data,
     } as AddMessageReq,
