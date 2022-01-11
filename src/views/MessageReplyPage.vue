@@ -77,7 +77,7 @@ const listScrollToBottom = (): void => {
 
 // #region reply drawer
 
-const channelId = computed(() => parseInt(route.params.channelId as string, 10));
+const channelId = computed(() => route.params.channelId as string);
 const messageId = computed(() => parseInt(route.params.messageId as string, 10));
 
 const replyDrawer = reactive({
@@ -112,7 +112,7 @@ const closeReplyDrawer = (): void => {
 
 const onGetMessageResp = (resp: GetMessageResp): void => {
   replyDrawer.loading = false;
-  if (resp.code === 200) {
+  if (resp.code === 200 && resp.data) {
     console.log('message:', resp.data);
     replyDrawer.data = resp.data;
   } else {

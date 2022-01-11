@@ -7,13 +7,13 @@ export interface GetHistoryMessagesReq extends GetChannelReq {
 }
 
 export interface GetMessageReq {
-  channelId: number;
+  channelId: string;
   messageId: number;
 }
 
 export interface AddMessageReq {
   userId: string;
   userToken: string;
-  channelId: number;
+  channelId: string;
   data: MessageForm;
 }

@@ -50,7 +50,7 @@ const router = useRouter();
 // #endregion
 
 const props = defineProps<{
-  channelId: number;
+  channelId: string;
   data: MessageSummary;
 }>();
 

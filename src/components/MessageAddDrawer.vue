@@ -67,7 +67,7 @@ const { useForm } = Form;
 // #endregion
 
 const props = defineProps<{
-  channelId: number;
+  channelId: string;
 }>();
 
 const emit = defineEmits<{

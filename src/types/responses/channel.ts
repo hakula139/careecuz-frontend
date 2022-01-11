@@ -10,5 +10,5 @@ export interface GetChannelResp extends Resp {
 }
 
 export interface AddChannelResp extends Resp {
-  id?: number;
+  id?: string;
 }

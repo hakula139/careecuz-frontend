@@ -1,7 +1,7 @@
 import { ChannelForm } from '../channel';
 
 export interface GetChannelReq {
-  id: number;
+  id: string;
 }
 
 export interface AddChannelReq {

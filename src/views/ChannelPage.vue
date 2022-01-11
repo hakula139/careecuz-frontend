@@ -115,7 +115,7 @@ const containerScrollToBottom = (): void => {
 
 // #region channel page
 
-const channelId = computed(() => parseInt(route.params.channelId as string, 10));
+const channelId = computed(() => route.params.channelId as string);
 
 const channelPage = reactive({
   loading: true,
