@@ -46,7 +46,6 @@ import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage } from '@/composables';
 import { AddChannelReq, AddChannelResp, ChannelForm } from '@/types';
-import { mockAddChannelResp } from '@/api/mock';
 
 const router = useRouter();
 const socket = inject<Socket>('socket');
@@ -89,7 +88,7 @@ const closeChannelAddDrawer = (): void => {
 const onAddChannelResp = (resp: AddChannelResp): void => {
   channelAddDrawer.visible = false;
   channelAddDrawer.loading = false;
-  if (resp.code === 200) {
+  if (resp.code === 200 && resp.id !== undefined) {
     console.log('channel id:', resp.id);
     router.push({
       name: 'ChannelPage',
@@ -101,21 +100,21 @@ const onAddChannelResp = (resp: AddChannelResp): void => {
   }
 };
 
-socket.on('addChannelResp', onAddChannelResp);
-
 const addChannel = (): void => {
   channelAddDrawer.loading = true;
   console.log('add channel:', channelAddDrawer.data);
   socket.timeout(TIMEOUT).emit(
-    'addChannelReq',
+    'channel:add',
     {
       data: channelAddDrawer.data,
     } as AddChannelReq,
-    (err: Error): void => {
+    (err: Error, resp: AddChannelResp): void => {
       channelAddDrawer.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      onAddChannelResp(mockAddChannelResp);
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onAddChannelResp(resp);
+      }
     },
   );
 };

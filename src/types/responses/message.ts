@@ -2,7 +2,7 @@ import { Resp } from './base';
 import { Message, MessageSummary } from '../message';
 
 export interface GetHistoryMessagesResp extends Resp {
-  data: MessageSummary[];
+  data?: MessageSummary[];
 }
 
 export interface PushNewMessage {
@@ -10,9 +10,9 @@ export interface PushNewMessage {
 }
 
 export interface GetMessageResp extends Resp {
-  data: Message;
+  data?: Message;
 }
 
 export interface AddMessageResp extends Resp {
-  id: number;
+  id?: number;
 }
