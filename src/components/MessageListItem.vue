@@ -29,7 +29,7 @@
       </div>
     </template>
     <template #datetime>
-      <a-tooltip :title="data.time">
+      <a-tooltip :title="getAbsoluteTime(data.time)">
         <span>{{ getRelativeTime(data.time) }}</span>
       </a-tooltip>
     </template>
@@ -42,7 +42,7 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { getRelativeTime, getUsername } from '@/composables';
+import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { MessageSummary } from '@/types';
 
 const router = useRouter();

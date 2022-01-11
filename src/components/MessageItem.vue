@@ -19,7 +19,7 @@
       </div>
     </template>
     <template #datetime>
-      <a-tooltip :title="data.time">
+      <a-tooltip :title="getAbsoluteTime(data.time)">
         <span>{{ getRelativeTime(data.time) }}</span>
       </a-tooltip>
     </template>
@@ -31,7 +31,7 @@
 
 import { computed } from 'vue';
 
-import { getRelativeTime, getUsername } from '@/composables';
+import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
 
 // #endregion
