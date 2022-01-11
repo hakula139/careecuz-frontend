@@ -68,6 +68,7 @@ const { useForm } = Form;
 
 const props = defineProps<{
   channelId: string;
+  messageIdMap?: Map<string, number>;
 }>();
 
 const emit = defineEmits<{
@@ -81,8 +82,11 @@ const messageAddDrawer = reactive({
   loading: false,
   fullscreen: false,
   height: (): string => (messageAddDrawer.fullscreen ? '100%' : '200px'),
-  placeHolder: (): string =>
-    (messageAddDrawer.data.replyTo ? `回复 #${messageAddDrawer.data.replyTo}` : '发条友善的评论吧～'),
+  placeHolder: (): string => {
+    const { replyTo } = messageAddDrawer.data;
+    const parsedReplyTo = replyTo ? props.messageIdMap?.get(replyTo) : undefined;
+    return parsedReplyTo ? `回复 #${parsedReplyTo}` : '发条友善的评论吧～';
+  },
   data: {
     content: '',
     replyTo: undefined,

@@ -29,6 +29,7 @@
           <template #renderItem="{ item }">
             <message-item
               :data="item"
+              :message-id-map="messageIdMap"
               @add-message="openMessageAddDrawer"
             />
           </template>
@@ -41,6 +42,7 @@
   <message-add-drawer
     ref="messageAddDrawerRef"
     :channel-id="channelId"
+    :message-id-map="messageIdMap"
     @done="listScrollToBottom"
   />
 </template>
@@ -110,11 +112,20 @@ const closeReplyDrawer = (): void => {
   }, 500);
 };
 
+const messageIdMap = ref(new Map<string, number>([]));
+
+// Provide human-friendly message ids.
+const getMessageIdMap = ({ id, replies }: Message): void => {
+  messageIdMap.value.set(id, 0);
+  replies.forEach((reply, i) => messageIdMap.value.set(reply.id, i + 1));
+};
+
 const onGetMessageResp = (resp: GetMessageResp): void => {
   replyDrawer.loading = false;
   if (resp.code === 200 && resp.data) {
     console.log('message:', resp.data);
     replyDrawer.data = resp.data;
+    getMessageIdMap(resp.data);
   } else {
     console.log('failed to get message:', resp.message);
     openMessage('error', '加载失败');

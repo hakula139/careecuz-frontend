@@ -3,9 +3,9 @@
     <template #author>
       <a-space>
         <span>{{ username }}</span>
-        <span>#{{ data.id }}</span>
-        <caret-right-outlined v-if="data.replyTo" />
-        <span v-if="data.replyTo">#{{ data.replyTo }}</span>
+        <span>#{{ messageIdMap?.get(data.id) || 0 }}</span>
+        <caret-right-outlined v-if="parsedReplyTo" />
+        <span v-if="parsedReplyTo">#{{ parsedReplyTo }}</span>
       </a-space>
     </template>
     <template #avatar>
@@ -38,6 +38,7 @@ import { Message } from '@/types';
 
 const props = defineProps<{
   data: Message;
+  messageIdMap?: Map<string, number>;
 }>();
 
 const emit = defineEmits<{
@@ -47,6 +48,8 @@ const emit = defineEmits<{
 // #region message item
 
 const username = computed(() => getUsername(props.data.user.userId));
+
+const parsedReplyTo = computed(() => (props.data.replyTo ? props.messageIdMap?.get(props.data.replyTo) : undefined));
 
 const onMessageClick = (): void => {
   emit('addMessage', props.data.id);
