@@ -57,7 +57,6 @@ import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage } from '@/composables';
 import { AddMessageReq, AddMessageResp, MessageForm } from '@/types';
-import { mockAddMessageResp } from '@/api/mock';
 
 const socket = inject<Socket>('socket');
 const { useForm } = Form;
@@ -131,8 +130,6 @@ const onAddMessageResp = (resp: AddMessageResp): void => {
   }
 };
 
-socket.on('addMessageResp', onAddMessageResp);
-
 const addMessage = (): void => {
   messageAddDrawer.loading = true;
   console.log('add message:', messageAddDrawer.data);
@@ -142,11 +139,13 @@ const addMessage = (): void => {
       channelId: props.channelId,
       data: messageAddDrawer.data,
     } as AddMessageReq,
-    (err: Error): void => {
+    (err: Error, resp: AddMessageResp): void => {
       messageAddDrawer.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      onAddMessageResp(mockAddMessageResp);
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onAddMessageResp(resp);
+      }
     },
   );
 };

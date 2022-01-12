@@ -59,7 +59,6 @@ import { inject, openMessage, scrollIntoView } from '@/composables';
 import {
   GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, User,
 } from '@/types';
-import { getMockGetMessageResp } from '@/api/mock';
 
 const route = useRoute();
 const router = useRouter();
@@ -132,8 +131,6 @@ const onGetMessageResp = (resp: GetMessageResp): void => {
   }
 };
 
-socket.on('getMessageResp', onGetMessageResp);
-
 const getMessage = (): void => {
   replyDrawer.loading = true;
   socket.timeout(TIMEOUT).emit(
@@ -142,11 +139,13 @@ const getMessage = (): void => {
       channelId: channelId.value,
       messageId: messageId.value,
     } as GetMessageReq,
-    (err: Error): void => {
+    (err: Error, resp: GetMessageResp): void => {
       replyDrawer.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      onGetMessageResp(getMockGetMessageResp());
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onGetMessageResp(resp);
+      }
     },
   );
 };
