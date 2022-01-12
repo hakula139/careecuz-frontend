@@ -56,7 +56,7 @@ const props = defineProps<{
 
 // #region message list item
 
-const username = computed(() => getUsername(props.data.user.userId));
+const username = computed(() => getUsername(props.data.user.id));
 
 const openReplyPage = (): void => {
   router.push({

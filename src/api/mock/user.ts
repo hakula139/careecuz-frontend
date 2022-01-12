@@ -4,8 +4,9 @@ import { UserAuthResp } from '@/types';
 import { mockResp, mockRespTemplate } from './response';
 
 export const mockUserTemplate = {
-  userId: '@guid',
+  id: '@guid',
   isBlocked: '@boolean',
+  isRemoved: '@boolean',
 };
 
 export const mockUserLoginResp: UserAuthResp = mock({

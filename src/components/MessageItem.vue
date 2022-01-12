@@ -47,7 +47,7 @@ const emit = defineEmits<{
 
 // #region message item
 
-const username = computed(() => getUsername(props.data.user.userId));
+const username = computed(() => getUsername(props.data.user.id));
 
 const parsedReplyTo = computed(() => (props.data.replyTo ? props.messageIdMap?.get(props.data.replyTo) : undefined));
 

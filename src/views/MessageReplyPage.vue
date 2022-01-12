@@ -88,7 +88,7 @@ const replyDrawer = reactive({
   data: {
     id: '',
     user: {
-      userId: '',
+      id: '',
       isBlocked: false,
     } as User,
     content: '',
