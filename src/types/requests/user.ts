@@ -6,5 +6,5 @@ export interface UserAuthReq {
 
 export interface PushUserInfo {
   userId: string;
-  userToken: string;
+  token: string;
 }

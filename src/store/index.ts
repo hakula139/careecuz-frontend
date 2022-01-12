@@ -12,11 +12,11 @@ export const store: Store<State> = createStore<State>({
   state: {
     status: '',
     userId: '',
-    userToken: '',
+    token: '',
   },
 
   getters: {
-    isLoggedIn: (state): boolean => Boolean(state.userToken),
+    isLoggedIn: (state): boolean => Boolean(state.token),
   },
 
   mutations: {
@@ -24,16 +24,16 @@ export const store: Store<State> = createStore<State>({
       state.status = 'loading';
     },
 
-    authSuccess: (state, resp: UserAuthResp): void => {
+    authSuccess: (state, { userId, token }: UserAuthResp): void => {
       state.status = 'success';
-      state.userId = resp.userId || '';
-      state.userToken = resp.token || '';
+      state.userId = userId || '';
+      state.token = token || '';
     },
 
     authReset: (state) => {
       state.status = '';
       state.userId = '';
-      state.userToken = '';
+      state.token = '';
     },
   },
 });
