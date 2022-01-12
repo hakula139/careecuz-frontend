@@ -19,7 +19,7 @@ const socket = inject<Socket>('socket');
 
 // #endregion
 
-const pushUserInfo = (retryLimit = 3): void => {
+const pushUserInfo = (): void => {
   if (store.getters.isLoggedIn) {
     const { userId, token } = store.state;
     console.log('pushing user info:', userId);
@@ -30,9 +30,9 @@ const pushUserInfo = (retryLimit = 3): void => {
         token,
       } as PushUserInfo,
       (err: Error, resp: Resp): void => {
-        if (err && retryLimit > 0) {
-          pushUserInfo(retryLimit - 1); // retry after timeout
-        } else if (err || resp.code !== 200) {
+        if (err) {
+          router.go(0);
+        } else if (resp.code !== 200) {
           const errorMessage = err ? '请求超时' : resp.message;
           console.log('failed to push user info:', errorMessage);
           openMessage('error', `请重新登录: ${errorMessage}`);

@@ -126,7 +126,7 @@ const onAddMessageResp = (resp: AddMessageResp): void => {
     emit('done');
   } else {
     console.log('failed to add message:', resp.message);
-    openMessage('error', '发表失败');
+    openMessage('error', `发表失败, ${resp.message}`);
   }
 };
 

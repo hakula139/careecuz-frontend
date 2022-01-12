@@ -96,7 +96,7 @@ const onAddChannelResp = (resp: AddChannelResp): void => {
     });
   } else {
     console.log('failed to add channel:', resp.message);
-    openMessage('error', '创建失败');
+    openMessage('error', `创建失败, ${resp.message}`);
   }
 };
 
