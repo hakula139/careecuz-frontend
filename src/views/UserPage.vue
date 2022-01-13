@@ -43,7 +43,6 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { getUsername } from '@/composables';
@@ -57,9 +56,9 @@ const store = useStore();
 
 // #region user
 
-const isMe = computed(() => !route.params.userId);
-const userId = computed(() => (isMe.value ? store.state.userId : (route.params.userId as string)));
-const username = computed(() => getUsername(userId.value));
+const isMe = !route.params.userId;
+const userId = isMe ? store.state.userId : (route.params.userId as string);
+const username = getUsername(userId);
 
 const logout = (): void => {
   store.commit('authReset');

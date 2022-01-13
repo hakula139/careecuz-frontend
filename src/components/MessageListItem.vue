@@ -39,7 +39,6 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
@@ -56,7 +55,7 @@ const props = defineProps<{
 
 // #region message list item
 
-const username = computed(() => getUsername(props.data.user.id));
+const username = getUsername(props.data.user.id);
 
 const openReplyPage = (): void => {
   router.push({

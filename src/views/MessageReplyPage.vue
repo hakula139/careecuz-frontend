@@ -50,7 +50,7 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
@@ -78,8 +78,8 @@ const listScrollToBottom = (): void => {
 
 // #region reply drawer
 
-const channelId = computed(() => route.params.channelId as string);
-const messageId = computed(() => route.params.messageId as string);
+const channelId = route.params.channelId as string;
+const messageId = route.params.messageId as string;
 
 const replyDrawer = reactive({
   visible: false,

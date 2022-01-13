@@ -29,8 +29,6 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed } from 'vue';
-
 import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
 
@@ -47,9 +45,9 @@ const emit = defineEmits<{
 
 // #region message item
 
-const username = computed(() => getUsername(props.data.user.id));
+const username = getUsername(props.data.user.id);
 
-const parsedReplyTo = computed(() => (props.data.replyTo ? props.messageIdMap?.get(props.data.replyTo) : undefined));
+const parsedReplyTo = props.data.replyTo ? props.messageIdMap?.get(props.data.replyTo) : undefined;
 
 const onMessageClick = (): void => {
   emit('addMessage', props.data.id);
