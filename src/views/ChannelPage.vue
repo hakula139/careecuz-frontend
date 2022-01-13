@@ -15,6 +15,7 @@
       <template #renderItem="{ item }">
         <a-list-item>
           <message-list-item
+            class="w-full"
             :channel-id="channelId"
             :data="item"
           />
@@ -56,6 +57,15 @@
       <a-button
         shape="circle"
         size="large"
+        @click="reload"
+      >
+        <template #icon>
+          <reload-outlined />
+        </template>
+      </a-button>
+      <a-button
+        shape="circle"
+        size="large"
         @click="containerScrollToBottom"
       >
         <template #icon>
@@ -78,7 +88,7 @@
 // #region imports
 
 import {
-  computed, nextTick, onUnmounted, reactive, ref,
+  nextTick, onBeforeUnmount, reactive, ref,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io-client';
@@ -93,11 +103,12 @@ import {
   GetChannelResp,
   GetHistoryMessagesReq,
   GetHistoryMessagesResp,
+  JoinChannel,
+  LeaveChannel,
   MessageAddDrawerExposed,
   MessageSummary,
-  PushNewMessage,
+  PushNewMessageSummary,
 } from '@/types';
-import { mockGetChannelResp, getMockGetHistoryMessagesResp, getMockPushNewMessage } from '@/api/mock';
 
 const route = useRoute();
 const socket = inject<Socket>('socket');
@@ -116,7 +127,7 @@ const containerScrollToBottom = (): void => {
 
 // #region channel page
 
-const channelId = computed(() => parseInt(route.params.channelId as string, 10));
+const channelId = route.params.channelId as string;
 
 const channelPage = reactive({
   loading: true,
@@ -127,7 +138,7 @@ const channelPage = reactive({
 });
 
 const onGetChannelResp = (resp: GetChannelResp): void => {
-  if (resp.code === 200) {
+  if (resp.code === 200 && resp.data !== undefined) {
     console.log('channel page:', resp.data);
     document.title = `${resp.data.name} - ${META_INFO.TITLE}`;
     channelPage.info = resp.data;
@@ -137,18 +148,18 @@ const onGetChannelResp = (resp: GetChannelResp): void => {
   }
 };
 
-socket.on('getChannelResp', onGetChannelResp);
-
 const getChannel = (): void => {
   socket.timeout(TIMEOUT).emit(
-    'getChannelReq',
+    'channel:get',
     {
-      id: channelId.value,
+      id: channelId,
     } as GetChannelReq,
-    (err: Error): void => {
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      onGetChannelResp(mockGetChannelResp);
+    (err: Error, resp: GetChannelResp): void => {
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onGetChannelResp(resp);
+      }
     },
   );
 };
@@ -157,56 +168,78 @@ const getChannel = (): void => {
 
 // #region messages
 
+const compareMessages = (a: MessageSummary, b: MessageSummary): number => a.time.localeCompare(b.time);
+
 const onGetHistoryMessagesResp = (resp: GetHistoryMessagesResp): void => {
   channelPage.loading = false;
-  if (resp.code === 200) {
+  if (resp.code === 200 && resp.data !== undefined) {
     console.log('history messages:', resp.data);
     const prevPosition = containerRef.value ? getPosition(containerRef.value) : 0;
-    channelPage.messages.unshift(...resp.data);
+    channelPage.messages.unshift(...resp.data.sort(compareMessages));
     nextTick((): void => {
       if (containerRef.value) {
         scrollToPosition(containerRef.value, prevPosition, !prevPosition);
       }
     });
+  } else {
+    console.log('failed to get history messages:', resp.message);
+    openMessage('error', '加载失败');
   }
 };
 
-socket.on('getHistoryMessagesResp', onGetHistoryMessagesResp);
-
-const getLastMessageId = (): number => (channelPage.messages.length ? channelPage.messages[0].id : 0);
+const getLastMessageId = (): string | undefined =>
+  (channelPage.messages.length ? channelPage.messages[0].id : undefined);
 
 const getHistoryMessages = (): void => {
   channelPage.loading = true;
   socket.timeout(TIMEOUT).emit(
-    'getHistoryMessagesReq',
+    'messages:get:history',
     {
-      id: channelId.value,
+      channelId,
       maxMessageCount: MAX_MESSAGE_COUNT,
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,
-    (_err: Error): void => {
+    (err: Error, resp: GetHistoryMessagesResp): void => {
       channelPage.loading = false;
-      // FIXME: remove mock data
-      onGetHistoryMessagesResp(getMockGetHistoryMessagesResp());
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onGetHistoryMessagesResp(resp);
+      }
     },
   );
 };
 
-const onPushNewMessage = (resp: PushNewMessage): void => {
+// #endregion
+
+// #region real-time message pushing
+
+const onPushNewMessageSummary = (resp: PushNewMessageSummary): void => {
   console.log('new message:', resp.data);
   const prevIsAtBottom = containerRef.value ? isAtBottom(containerRef.value) : true;
-  channelPage.messages.push(resp.data);
+  if (!resp.data.replyTo) {
+    channelPage.messages.push(resp.data);
+  }
   nextTick((): void => {
     if (prevIsAtBottom) containerScrollToBottom();
   });
 };
 
-socket.on('pushNewMessage', onPushNewMessage);
+socket.on('message:new:summary', onPushNewMessageSummary);
 
-// FIXME: remove mock data
-const intervalHandler = setInterval((): void => {
-  onPushNewMessage(getMockPushNewMessage());
-}, 2000);
+const joinChannel = (): void => {
+  console.log('join channel:', channelId);
+  socket.emit('channel:join', {
+    id: channelId,
+  } as JoinChannel);
+};
+
+const leaveChannel = (): void => {
+  console.log('leave channel:', channelId);
+  socket.emit('channel:leave', {
+    id: channelId,
+  } as LeaveChannel);
+};
 
 // #endregion
 
@@ -221,13 +254,15 @@ const openMessageAddDrawer = (): void => {
 // #endregion
 
 const reload = (): void => {
+  joinChannel();
   getChannel();
+  channelPage.messages.length = 0;
   getHistoryMessages();
 };
 
 reload();
 
-onUnmounted((): void => {
-  clearInterval(intervalHandler);
+onBeforeUnmount((): void => {
+  leaveChannel();
 });
 </script>

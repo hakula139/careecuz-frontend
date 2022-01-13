@@ -114,9 +114,9 @@ import { META_INFO, SEND_VERIFY_CODE_INTERVAL, TIMEOUT } from '@/configs';
 import { Countdown, inject, openMessage } from '@/composables';
 import { useStore } from '@/store';
 import {
-  Resp, UserForm, UserLoginReq, UserLoginResp,
+  Resp, UserForm, UserAuthReq, UserAuthResp,
 } from '@/types';
-import { mockSendVerifyCodeResp, mockUserRegisterRequiredResp, mockUserRegisterResp } from '@/api/mock';
+import { mockSendVerifyCodeResp } from '@/api/mock';
 
 const router = useRouter();
 const store = useStore();
@@ -195,11 +195,11 @@ const userFormRules = reactive({
 
 const { validate } = useForm(userForm.data, userFormRules);
 
-const onUserLoginResp = (resp: UserLoginResp): void => {
+const onUserLoginResp = (resp: UserAuthResp): void => {
   userForm.loading = false;
   if (resp.code === 200) {
     store.commit('authSuccess', resp);
-    console.log('user logged in:', resp.id);
+    console.log('user logged in:', resp.userId);
     router.push({ name: 'ChannelList' });
   } else if (resp.code === 100) {
     console.log('user not registered:', userForm.data.email);
@@ -211,13 +211,11 @@ const onUserLoginResp = (resp: UserLoginResp): void => {
   }
 };
 
-socket.on('userLoginResp', onUserLoginResp);
-
-const onUserRegisterResp = (resp: UserLoginResp): void => {
+const onUserRegisterResp = (resp: UserAuthResp): void => {
   userForm.loading = false;
   if (resp.code === 200) {
     store.commit('authSuccess', resp);
-    console.log('user registered:', resp.id);
+    console.log('user registered:', resp.userId);
     router.push({ name: 'ChannelList' });
   } else {
     store.commit('authReset');
@@ -225,8 +223,6 @@ const onUserRegisterResp = (resp: UserLoginResp): void => {
     openMessage('error', `注册失败: ${resp.message}`);
   }
 };
-
-socket.on('userRegisterResp', onUserRegisterResp);
 
 const parseFormData = ({ email, password, verifyCode }: UserForm): UserForm => ({
   email: email + emailDomain.selected,
@@ -239,18 +235,18 @@ const login = (): void => {
   console.log('login:', userForm.data.email);
   store.commit('authLoading');
   socket.timeout(TIMEOUT).emit(
-    userForm.isRegisterMode ? 'userRegisterReq' : 'userLoginReq',
+    userForm.isRegisterMode ? 'user:register' : 'user:login',
     {
       data: parseFormData(userForm.data),
-    } as UserLoginReq,
-    (err: Error): void => {
+    } as UserAuthReq,
+    (err: Error, resp: UserAuthResp): void => {
       userForm.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      if (userForm.isRegisterMode) {
-        onUserRegisterResp(mockUserRegisterResp);
+      if (err) {
+        openMessage('error', '请求超时');
+      } else if (userForm.isRegisterMode) {
+        onUserRegisterResp(resp);
       } else {
-        onUserLoginResp(mockUserRegisterRequiredResp);
+        onUserLoginResp(resp);
       }
     },
   );
@@ -285,7 +281,7 @@ const onSendVerifyCodeResp = (resp: Resp): void => {
 socket.on('sendVerifyCodeResp', onSendVerifyCodeResp);
 
 const sendVerifyCode = (): void => {
-  console.log('send verify code', userForm.data.email);
+  console.log('send verify code:', userForm.data.email);
   socket.timeout(TIMEOUT).emit('sendVerifyCodeReq', (err: Error): void => {
     if (err) openMessage('error', '请求超时');
     // FIXME: remove mock data

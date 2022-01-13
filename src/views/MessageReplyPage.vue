@@ -29,6 +29,7 @@
           <template #renderItem="{ item }">
             <message-item
               :data="item"
+              :message-id-map="messageIdMap"
               @add-message="openMessageAddDrawer"
             />
           </template>
@@ -41,6 +42,7 @@
   <message-add-drawer
     ref="messageAddDrawerRef"
     :channel-id="channelId"
+    :message-id-map="messageIdMap"
     @done="listScrollToBottom"
   />
 </template>
@@ -48,16 +50,15 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed, reactive, ref } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage, scrollIntoView } from '@/composables';
 import {
-  GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, User,
+  GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, PushNewMessage, User,
 } from '@/types';
-import { getMockGetMessageResp } from '@/api/mock';
 
 const route = useRoute();
 const router = useRouter();
@@ -77,21 +78,21 @@ const listScrollToBottom = (): void => {
 
 // #region reply drawer
 
-const channelId = computed(() => parseInt(route.params.channelId as string, 10));
-const messageId = computed(() => parseInt(route.params.messageId as string, 10));
+const channelId = route.params.channelId as string;
+const messageId = route.params.messageId as string;
 
 const replyDrawer = reactive({
   visible: false,
   loading: false,
   data: {
-    id: 0,
+    id: '',
     user: {
-      userId: '',
+      id: '',
       isBlocked: false,
     } as User,
     content: '',
     time: '',
-    replyTo: 0,
+    replyTo: undefined,
     replies: [] as Message[],
   } as Message,
 });
@@ -105,40 +106,79 @@ const closeReplyDrawer = (): void => {
   setTimeout((): void => {
     router.push({
       name: 'ChannelPage',
-      params: { channelId: channelId.value },
+      params: { channelId },
     });
   }, 500);
 };
 
+const messageIdMap = ref(new Map<string, number>([]));
+
+const spreadMessageReplies = (replies: Message[]): Message[] =>
+  replies.reduce((result, reply) => {
+    result.push(reply, ...spreadMessageReplies(reply.replies));
+    return result;
+  }, [] as Message[]);
+
+// Provide human-friendly message ids.
+const getMessageIdMap = ({ id, replies }: Message): void => {
+  messageIdMap.value.set(id, 0);
+  replies.forEach((reply, i) => messageIdMap.value.set(reply.id, i + 1));
+};
+
+const compareMessages = (a: Message, b: Message): number => a.time.localeCompare(b.time);
+
 const onGetMessageResp = (resp: GetMessageResp): void => {
   replyDrawer.loading = false;
-  if (resp.code === 200) {
+  if (resp.code === 200 && resp.data) {
     console.log('message:', resp.data);
-    replyDrawer.data = resp.data;
+    Object.assign(replyDrawer.data, resp.data, {
+      replies: spreadMessageReplies(resp.data.replies).sort(compareMessages),
+    });
+    console.log('parsed message:', replyDrawer.data);
+    getMessageIdMap(replyDrawer.data);
+  } else if (resp.code === 404) {
+    openMessage('error', '消息不存在');
+    setTimeout(() => {
+      router.go(-1);
+    }, 1000);
   } else {
     console.log('failed to get message:', resp.message);
     openMessage('error', '加载失败');
   }
 };
 
-socket.on('getMessageResp', onGetMessageResp);
-
 const getMessage = (): void => {
   replyDrawer.loading = true;
   socket.timeout(TIMEOUT).emit(
-    'getMessageReq',
+    'message:get',
     {
-      channelId: channelId.value,
-      messageId: messageId.value,
+      channelId,
+      messageId,
     } as GetMessageReq,
-    (err: Error): void => {
+    (err: Error, resp: GetMessageResp): void => {
       replyDrawer.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      onGetMessageResp(getMockGetMessageResp());
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onGetMessageResp(resp);
+      }
     },
   );
 };
+
+// #endregion
+
+// #region real-time message pushing
+
+const onPushNewMessage = (resp: PushNewMessage): void => {
+  console.log('new message:', resp.data);
+  replyDrawer.data.replies.push(resp.data);
+  nextTick((): void => {
+    listScrollToBottom();
+  });
+};
+
+socket.on('message:new', onPushNewMessage);
 
 // #endregion
 
@@ -146,7 +186,7 @@ const getMessage = (): void => {
 
 const messageAddDrawerRef = ref<MessageAddDrawerExposed>();
 
-const openMessageAddDrawer = (replyTo: number): void => {
+const openMessageAddDrawer = (replyTo?: string): void => {
   messageAddDrawerRef.value?.openMessageAddDrawer(replyTo);
 };
 

@@ -56,18 +56,16 @@ import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage } from '@/composables';
-import { useStore } from '@/store';
 import { AddMessageReq, AddMessageResp, MessageForm } from '@/types';
-import { mockAddMessageResp } from '@/api/mock';
 
-const store = useStore();
 const socket = inject<Socket>('socket');
 const { useForm } = Form;
 
 // #endregion
 
 const props = defineProps<{
-  channelId: number;
+  channelId: string;
+  messageIdMap?: Map<string, number>;
 }>();
 
 const emit = defineEmits<{
@@ -81,11 +79,14 @@ const messageAddDrawer = reactive({
   loading: false,
   fullscreen: false,
   height: (): string => (messageAddDrawer.fullscreen ? '100%' : '200px'),
-  placeHolder: (): string =>
-    (messageAddDrawer.data.replyTo ? `回复 #${messageAddDrawer.data.replyTo}` : '发条友善的评论吧～'),
+  placeHolder: (): string => {
+    const { replyTo } = messageAddDrawer.data;
+    const parsedReplyTo = replyTo ? props.messageIdMap?.get(replyTo) : undefined;
+    return parsedReplyTo ? `回复 #${parsedReplyTo}` : '发条友善的评论吧～';
+  },
   data: {
     content: '',
-    replyTo: 0,
+    replyTo: undefined,
   } as MessageForm,
 });
 
@@ -102,7 +103,7 @@ const messageFormRules = reactive({
 
 const { clearValidate, resetFields, validate } = useForm(messageAddDrawer.data, messageFormRules);
 
-const openMessageAddDrawer = (replyTo: number = 0): void => {
+const openMessageAddDrawer = (replyTo?: string): void => {
   messageAddDrawer.data.replyTo = replyTo;
   messageAddDrawer.visible = true;
 };
@@ -125,28 +126,26 @@ const onAddMessageResp = (resp: AddMessageResp): void => {
     emit('done');
   } else {
     console.log('failed to add message:', resp.message);
-    openMessage('error', '发表失败');
+    openMessage('error', `发表失败, ${resp.message}`);
   }
 };
-
-socket.on('addMessageResp', onAddMessageResp);
 
 const addMessage = (): void => {
   messageAddDrawer.loading = true;
   console.log('add message:', messageAddDrawer.data);
   socket.timeout(TIMEOUT).emit(
-    'addMessageReq',
+    'message:add',
     {
-      userId: store.state.userId,
-      userToken: store.state.userToken,
       channelId: props.channelId,
       data: messageAddDrawer.data,
     } as AddMessageReq,
-    (err: Error): void => {
+    (err: Error, resp: AddMessageResp): void => {
       messageAddDrawer.loading = false;
-      if (err) openMessage('error', '请求超时');
-      // FIXME: remove mock data
-      onAddMessageResp(mockAddMessageResp);
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onAddMessageResp(resp);
+      }
     },
   );
 };

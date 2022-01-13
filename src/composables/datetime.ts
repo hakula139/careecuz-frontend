@@ -8,6 +8,8 @@ const year = day * 365;
 
 const parseDatetime = (time: string) => (time.endsWith('Z') ? time : `${time.replace(' ', 'T')}Z`);
 
+export const getAbsoluteTime = (time: string): string => new Date(parseDatetime(time)).toLocaleString('sv');
+
 export const getRelativeTime = (time: string): string => {
   let elapsed = new Date(parseDatetime(time)).getTime() - Date.now();
   const postfix = elapsed <= 0 ? '前' : '后';

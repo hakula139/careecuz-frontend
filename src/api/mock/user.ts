@@ -1,20 +1,21 @@
 import { mock } from 'mockjs';
 
-import { UserLoginResp } from '@/types';
+import { UserAuthResp } from '@/types';
 import { mockResp, mockRespTemplate } from './response';
 
 export const mockUserTemplate = {
-  userId: '@guid',
+  id: '@guid',
   isBlocked: '@boolean',
+  isRemoved: '@boolean',
 };
 
-export const mockUserLoginResp: UserLoginResp = mock({
+export const mockUserLoginResp: UserAuthResp = mock({
   ...mockRespTemplate,
   id: '@guid',
   token: '@string(20)',
 });
 
-export const mockUserRegisterRequiredResp: UserLoginResp = mock({
+export const mockUserRegisterRequiredResp: UserAuthResp = mock({
   code: 100,
   message: 'user not registered',
   id: '@guid',
