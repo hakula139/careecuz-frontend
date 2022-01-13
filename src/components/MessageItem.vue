@@ -15,7 +15,7 @@
     </template>
     <template #content>
       <div @click="onMessageClick">
-        <p>{{ data.content }}</p>
+        <markdown-text :text="data.content" />
       </div>
     </template>
     <template #datetime>
@@ -31,6 +31,7 @@
 
 import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
+import MarkdownText from './MarkdownText.vue';
 
 // #endregion
 

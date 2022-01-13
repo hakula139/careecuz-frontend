@@ -82,7 +82,7 @@ const messageAddDrawer = reactive({
   placeHolder: (): string => {
     const { replyTo } = messageAddDrawer.data;
     const parsedReplyTo = replyTo ? props.messageIdMap?.get(replyTo) : undefined;
-    return parsedReplyTo ? `回复 #${parsedReplyTo}` : '发条友善的评论吧～';
+    return parsedReplyTo ? `回复 #${parsedReplyTo}` : '发条友善的评论吧～（支持 Markdown 语法）';
   },
   data: {
     content: '',
