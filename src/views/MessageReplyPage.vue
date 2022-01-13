@@ -106,7 +106,7 @@ const closeReplyDrawer = (): void => {
   setTimeout((): void => {
     router.push({
       name: 'ChannelPage',
-      params: { channelId: channelId.value },
+      params: { channelId },
     });
   }, 500);
 };
@@ -136,6 +136,11 @@ const onGetMessageResp = (resp: GetMessageResp): void => {
     });
     console.log('parsed message:', replyDrawer.data);
     getMessageIdMap(replyDrawer.data);
+  } else if (resp.code === 404) {
+    openMessage('error', '消息不存在');
+    setTimeout(() => {
+      router.go(-1);
+    }, 1000);
   } else {
     console.log('failed to get message:', resp.message);
     openMessage('error', '加载失败');
@@ -147,8 +152,8 @@ const getMessage = (): void => {
   socket.timeout(TIMEOUT).emit(
     'message:get',
     {
-      channelId: channelId.value,
-      messageId: messageId.value,
+      channelId,
+      messageId,
     } as GetMessageReq,
     (err: Error, resp: GetMessageResp): void => {
       replyDrawer.loading = false;
