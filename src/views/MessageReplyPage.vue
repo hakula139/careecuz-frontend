@@ -113,6 +113,12 @@ const closeReplyDrawer = (): void => {
 
 const messageIdMap = ref(new Map<string, number>([]));
 
+const spreadMessageReplies = (replies: Message[]): Message[] =>
+  replies.reduce((result, reply) => {
+    result.push(reply, ...spreadMessageReplies(reply.replies));
+    return result;
+  }, [] as Message[]);
+
 // Provide human-friendly message ids.
 const getMessageIdMap = ({ id, replies }: Message): void => {
   messageIdMap.value.set(id, 0);
@@ -123,8 +129,11 @@ const onGetMessageResp = (resp: GetMessageResp): void => {
   replyDrawer.loading = false;
   if (resp.code === 200 && resp.data) {
     console.log('message:', resp.data);
-    replyDrawer.data = resp.data;
-    getMessageIdMap(resp.data);
+    Object.assign(replyDrawer.data, resp.data, {
+      replies: spreadMessageReplies(resp.data.replies).sort((a, b) => a.time.localeCompare(b.time)),
+    });
+    console.log('parsed message:', replyDrawer.data);
+    getMessageIdMap(replyDrawer.data);
   } else {
     console.log('failed to get message:', resp.message);
     openMessage('error', '加载失败');
