@@ -45,6 +45,7 @@ declare module 'vue' {
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
     PageHeader: typeof import('./src/components/PageHeader.vue')['default'];
     PlusOutlined: typeof import('@ant-design/icons-vue')['PlusOutlined'];
+    ReloadOutlined: typeof import('@ant-design/icons-vue')['ReloadOutlined'];
     ShrinkOutlined: typeof import('@ant-design/icons-vue')['ShrinkOutlined'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
     UserOutlined: typeof import('@ant-design/icons-vue')['UserOutlined'];

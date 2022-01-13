@@ -57,6 +57,15 @@
       <a-button
         shape="circle"
         size="large"
+        @click="reload"
+      >
+        <template #icon>
+          <reload-outlined />
+        </template>
+      </a-button>
+      <a-button
+        shape="circle"
+        size="large"
         @click="containerScrollToBottom"
       >
         <template #icon>
@@ -222,6 +231,7 @@ const openMessageAddDrawer = (): void => {
 
 const reload = (): void => {
   getChannel();
+  channelPage.messages.length = 0;
   getHistoryMessages();
 };
 
