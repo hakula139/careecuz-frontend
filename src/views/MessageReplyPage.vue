@@ -50,14 +50,14 @@
 <script setup lang="ts">
 // #region imports
 
-import { reactive, ref } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { TIMEOUT } from '@/configs';
 import { inject, openMessage, scrollIntoView } from '@/composables';
 import {
-  GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, User,
+  GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, PushNewMessage, User,
 } from '@/types';
 
 const route = useRoute();
@@ -165,6 +165,20 @@ const getMessage = (): void => {
     },
   );
 };
+
+// #endregion
+
+// #region real-time message pushing
+
+const onPushNewMessage = (resp: PushNewMessage): void => {
+  console.log('new message:', resp.data);
+  replyDrawer.data.replies.push(resp.data);
+  nextTick((): void => {
+    listScrollToBottom();
+  });
+};
+
+socket.on('message:new', onPushNewMessage);
 
 // #endregion
 

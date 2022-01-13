@@ -107,7 +107,7 @@ import {
   LeaveChannel,
   MessageAddDrawerExposed,
   MessageSummary,
-  PushNewMessage,
+  PushNewMessageSummary,
 } from '@/types';
 
 const route = useRoute();
@@ -214,14 +214,18 @@ const getHistoryMessages = (): void => {
 
 // #region real-time message pushing
 
-const onPushNewMessage = (resp: PushNewMessage): void => {
+const onPushNewMessageSummary = (resp: PushNewMessageSummary): void => {
   console.log('new message:', resp.data);
   const prevIsAtBottom = containerRef.value ? isAtBottom(containerRef.value) : true;
-  channelPage.messages.push(resp.data);
+  if (!resp.data.replyTo) {
+    channelPage.messages.push(resp.data);
+  }
   nextTick((): void => {
     if (prevIsAtBottom) containerScrollToBottom();
   });
 };
+
+socket.on('message:new:summary', onPushNewMessageSummary);
 
 const joinChannel = (): void => {
   console.log('join channel:', channelId);
@@ -236,8 +240,6 @@ const leaveChannel = (): void => {
     id: channelId,
   } as LeaveChannel);
 };
-
-socket.on('message:new', onPushNewMessage);
 
 // #endregion
 
