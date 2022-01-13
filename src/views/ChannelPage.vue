@@ -182,7 +182,7 @@ const getHistoryMessages = (): void => {
   socket.timeout(TIMEOUT).emit(
     'messages:get:history',
     {
-      id: channelId.value,
+      channelId: channelId.value,
       maxMessageCount: MAX_MESSAGE_COUNT,
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,
