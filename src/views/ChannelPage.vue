@@ -15,6 +15,7 @@
       <template #renderItem="{ item }">
         <a-list-item>
           <message-list-item
+            class="w-full"
             :channel-id="channelId"
             :data="item"
           />
