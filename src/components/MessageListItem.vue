@@ -25,7 +25,7 @@
     </template>
     <template #content>
       <div @click="openReplyPage">
-        <p>{{ data.content }}</p>
+        <markdown-text :text="data.content" />
       </div>
     </template>
     <template #datetime>
@@ -43,6 +43,7 @@ import { useRouter } from 'vue-router';
 
 import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { MessageSummary } from '@/types';
+import MarkdownText from './MarkdownText.vue';
 
 const router = useRouter();
 
