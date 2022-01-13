@@ -7,3 +7,7 @@ export interface GetChannelReq {
 export interface AddChannelReq {
   data: ChannelForm;
 }
+
+export type JoinChannel = GetChannelReq;
+
+export type LeaveChannel = JoinChannel;

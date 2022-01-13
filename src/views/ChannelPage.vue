@@ -88,7 +88,7 @@
 // #region imports
 
 import {
-  computed, nextTick, reactive, ref,
+  nextTick, onBeforeUnmount, reactive, ref,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io-client';
@@ -103,6 +103,8 @@ import {
   GetChannelResp,
   GetHistoryMessagesReq,
   GetHistoryMessagesResp,
+  JoinChannel,
+  LeaveChannel,
   MessageAddDrawerExposed,
   MessageSummary,
   PushNewMessage,
@@ -125,7 +127,7 @@ const containerScrollToBottom = (): void => {
 
 // #region channel page
 
-const channelId = computed(() => route.params.channelId as string);
+const channelId = route.params.channelId as string;
 
 const channelPage = reactive({
   loading: true,
@@ -150,7 +152,7 @@ const getChannel = (): void => {
   socket.timeout(TIMEOUT).emit(
     'channel:get',
     {
-      id: channelId.value,
+      id: channelId,
     } as GetChannelReq,
     (err: Error, resp: GetChannelResp): void => {
       if (err) {
@@ -193,7 +195,7 @@ const getHistoryMessages = (): void => {
   socket.timeout(TIMEOUT).emit(
     'messages:get:history',
     {
-      channelId: channelId.value,
+      channelId,
       maxMessageCount: MAX_MESSAGE_COUNT,
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,
@@ -208,6 +210,10 @@ const getHistoryMessages = (): void => {
   );
 };
 
+// #endregion
+
+// #region real-time message pushing
+
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
   const prevIsAtBottom = containerRef.value ? isAtBottom(containerRef.value) : true;
@@ -217,7 +223,21 @@ const onPushNewMessage = (resp: PushNewMessage): void => {
   });
 };
 
-socket.on('pushNewMessage', onPushNewMessage);
+const joinChannel = (): void => {
+  console.log('join channel:', channelId);
+  socket.emit('channel:join', {
+    id: channelId,
+  } as JoinChannel);
+};
+
+const leaveChannel = (): void => {
+  console.log('leave channel:', channelId);
+  socket.emit('channel:leave', {
+    id: channelId,
+  } as LeaveChannel);
+};
+
+socket.on('message:new', onPushNewMessage);
 
 // #endregion
 
@@ -232,10 +252,15 @@ const openMessageAddDrawer = (): void => {
 // #endregion
 
 const reload = (): void => {
+  joinChannel();
   getChannel();
   channelPage.messages.length = 0;
   getHistoryMessages();
 };
 
 reload();
+
+onBeforeUnmount((): void => {
+  leaveChannel();
+});
 </script>
