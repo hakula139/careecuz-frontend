@@ -166,12 +166,14 @@ const getChannel = (): void => {
 
 // #region messages
 
+const compareMessages = (a: MessageSummary, b: MessageSummary): number => a.time.localeCompare(b.time);
+
 const onGetHistoryMessagesResp = (resp: GetHistoryMessagesResp): void => {
   channelPage.loading = false;
   if (resp.code === 200 && resp.data !== undefined) {
     console.log('history messages:', resp.data);
     const prevPosition = containerRef.value ? getPosition(containerRef.value) : 0;
-    channelPage.messages.unshift(...resp.data);
+    channelPage.messages.unshift(...resp.data.sort(compareMessages));
     nextTick((): void => {
       if (containerRef.value) {
         scrollToPosition(containerRef.value, prevPosition, !prevPosition);

@@ -125,12 +125,14 @@ const getMessageIdMap = ({ id, replies }: Message): void => {
   replies.forEach((reply, i) => messageIdMap.value.set(reply.id, i + 1));
 };
 
+const compareMessages = (a: Message, b: Message): number => a.time.localeCompare(b.time);
+
 const onGetMessageResp = (resp: GetMessageResp): void => {
   replyDrawer.loading = false;
   if (resp.code === 200 && resp.data) {
     console.log('message:', resp.data);
     Object.assign(replyDrawer.data, resp.data, {
-      replies: spreadMessageReplies(resp.data.replies).sort((a, b) => a.time.localeCompare(b.time)),
+      replies: spreadMessageReplies(resp.data.replies).sort(compareMessages),
     });
     console.log('parsed message:', replyDrawer.data);
     getMessageIdMap(replyDrawer.data);
