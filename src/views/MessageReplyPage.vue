@@ -50,7 +50,9 @@
 <script setup lang="ts">
 // #region imports
 
-import { nextTick, reactive, ref } from 'vue';
+import {
+  nextTick, onUnmounted, reactive, ref,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
@@ -114,7 +116,7 @@ const messageIdMap = ref(new Map<string, number>([]));
 
 const spreadMessageReplies = (replies: Message[]): Message[] =>
   replies.reduce((result, reply) => {
-    result.push(reply, ...spreadMessageReplies(reply.replies));
+    result.push(Object.assign(reply, { replies: [] }), ...spreadMessageReplies(reply.replies));
     return result;
   }, [] as Message[]);
 
@@ -157,9 +159,10 @@ const getMessage = (): void => {
 
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
-  if (replyDrawer.data.id === resp.data.replyTo) {
+  const { id, replyTo } = resp.data;
+  if (replyTo && messageIdMap.value.get(replyTo) !== undefined) {
     replyDrawer.data.replies.push(resp.data);
-    messageIdMap.value.set(resp.data.id, messageIdMap.value.size + 1);
+    messageIdMap.value.set(id, messageIdMap.value.size + 1);
     nextTick((): void => {
       listScrollToBottom();
     });
@@ -186,6 +189,10 @@ const reload = (): void => {
 };
 
 reload();
+
+onUnmounted(() => {
+  socket.off('message:new', onPushNewMessage);
+});
 </script>
 
 <style scoped>
