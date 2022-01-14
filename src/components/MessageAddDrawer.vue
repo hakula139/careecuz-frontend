@@ -119,7 +119,6 @@ const toggleMessageAddDrawerHeight = (): void => {
 
 const onAddMessageResp = (resp: AddMessageResp): void => {
   messageAddDrawer.visible = false;
-  messageAddDrawer.loading = false;
   if (resp.code === 200) {
     console.log('message id:', resp.id);
     resetFields();

@@ -54,7 +54,6 @@ import { nextTick, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
-import { TIMEOUT } from '@/configs';
 import { inject, openMessage, scrollIntoView } from '@/composables';
 import {
   GetMessageReq, GetMessageResp, Message, MessageAddDrawerExposed, PushNewMessage, User,
@@ -149,21 +148,7 @@ const onGetMessageResp = (resp: GetMessageResp): void => {
 
 const getMessage = (): void => {
   replyDrawer.loading = true;
-  socket.timeout(TIMEOUT).emit(
-    'message:get',
-    {
-      channelId,
-      messageId,
-    } as GetMessageReq,
-    (err: Error, resp: GetMessageResp): void => {
-      replyDrawer.loading = false;
-      if (err) {
-        openMessage('error', '请求超时');
-      } else {
-        onGetMessageResp(resp);
-      }
-    },
-  );
+  socket.emit('message:get', { channelId, messageId } as GetMessageReq, onGetMessageResp);
 };
 
 // #endregion
@@ -172,11 +157,13 @@ const getMessage = (): void => {
 
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
-  replyDrawer.data.replies.push(resp.data);
-  messageIdMap.value.set(resp.data.id, messageIdMap.value.size + 1);
-  nextTick((): void => {
-    listScrollToBottom();
-  });
+  if (replyDrawer.data.id === resp.data.replyTo) {
+    replyDrawer.data.replies.push(resp.data);
+    messageIdMap.value.set(resp.data.id, messageIdMap.value.size + 1);
+    nextTick((): void => {
+      listScrollToBottom();
+    });
+  }
 };
 
 socket.on('message:new', onPushNewMessage);

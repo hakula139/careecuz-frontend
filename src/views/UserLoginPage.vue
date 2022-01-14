@@ -234,16 +234,13 @@ const login = (): void => {
   userForm.loading = true;
   console.log('login:', userForm.data.email);
   store.commit('authLoading');
-  socket.timeout(TIMEOUT).emit(
+  socket.emit(
     userForm.isRegisterMode ? 'user:register' : 'user:login',
     {
       data: parseFormData(userForm.data),
     } as UserAuthReq,
-    (err: Error, resp: UserAuthResp): void => {
-      userForm.loading = false;
-      if (err) {
-        openMessage('error', '请求超时');
-      } else if (userForm.isRegisterMode) {
+    (resp: UserAuthResp): void => {
+      if (userForm.isRegisterMode) {
         onUserRegisterResp(resp);
       } else {
         onUserLoginResp(resp);
