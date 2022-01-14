@@ -9,15 +9,17 @@ import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { TIMEOUT } from '@/configs';
-import { inject, openMessage } from '@/composables';
+import { getUsername, inject, openMessage } from '@/composables';
 import { useStore } from '@/store';
-import { PushUserInfo, Resp } from '@/types';
+import { PushNewNotification, PushUserInfo, Resp } from '@/types';
 
 const router = useRouter();
 const store = useStore();
 const socket = inject<Socket>('socket');
 
 // #endregion
+
+// #region initialize socket
 
 const pushUserInfo = (): void => {
   if (store.getters.isLoggedIn) {
@@ -45,4 +47,18 @@ const pushUserInfo = (): void => {
 };
 
 socket.on('connect', pushUserInfo);
+
+// #endregion
+
+// #region notification
+
+const popNotification = (resp: PushNewNotification): void => {
+  console.log('new notification:', resp.data);
+  const { user } = resp.data.message;
+  openMessage('info', `收到来自 ${getUsername(user.id)} 的回复`);
+};
+
+socket.on('notification:new', popNotification);
+
+// #endregion
 </script>

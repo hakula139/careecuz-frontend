@@ -5,7 +5,7 @@ export interface MessageForm {
   replyTo?: string;
 }
 
-interface MessageBase extends MessageForm {
+export interface MessageBase extends MessageForm {
   id: string;
   user: User;
   time: string;
