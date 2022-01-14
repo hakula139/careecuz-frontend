@@ -31,7 +31,6 @@
 
 import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
-import MarkdownText from './MarkdownText.vue';
 
 // #endregion
 

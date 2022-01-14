@@ -1,5 +1,10 @@
-import { Notification } from '../notification';
+import { Resp } from './base';
+import { Notification, NotificationSummary } from '../notification';
+
+export interface GetNotificationsResp extends Resp {
+  data?: Notification[];
+}
 
 export interface PushNewNotification {
-  data: Notification;
+  data: NotificationSummary;
 }

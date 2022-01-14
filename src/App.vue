@@ -69,11 +69,11 @@ const popNotification = (resp: PushNewNotification): void => {
   });
 };
 
-socket.on('notification:new', popNotification);
+socket.on('notification:new:summary', popNotification);
 
 onUnmounted(() => {
   socket.off('connect', pushUserInfo);
-  socket.off('notification:new', popNotification);
+  socket.off('notification:new:summary', popNotification);
 });
 // #endregion
 </script>

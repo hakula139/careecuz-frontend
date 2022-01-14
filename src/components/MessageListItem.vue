@@ -43,7 +43,6 @@ import { useRouter } from 'vue-router';
 
 import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { MessageSummary } from '@/types';
-import MarkdownText from './MarkdownText.vue';
 
 const router = useRouter();
 
