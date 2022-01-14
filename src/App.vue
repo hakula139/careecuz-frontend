@@ -5,6 +5,7 @@
 <script lang="ts" setup>
 // #region imports
 
+import { onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
@@ -54,13 +55,25 @@ socket.on('connect', pushUserInfo);
 
 const popNotification = (resp: PushNewNotification): void => {
   console.log('new notification:', resp.data);
-  const { user } = resp.data.message;
-  openMessage('info', `收到来自 ${getUsername(user.id)} 的回复，点击查看详情`, 5, () => {
-    router.push({ name: 'NotificationList' });
+  const {
+    fromUserId, channelId, threadId, messageId,
+  } = resp.data;
+  openMessage('info', `收到来自 ${getUsername(fromUserId)} 的回复，点击查看详情`, 5, messageId, () => {
+    router.push({
+      name: 'MessageReplyPage',
+      params: {
+        channelId,
+        messageId: threadId,
+      },
+    });
   });
 };
 
 socket.on('notification:new', popNotification);
 
+onUnmounted(() => {
+  socket.off('connect', pushUserInfo);
+  socket.off('notification:new', popNotification);
+});
 // #endregion
 </script>
