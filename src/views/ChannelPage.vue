@@ -93,7 +93,7 @@ import {
 import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
-import { MAX_MESSAGE_COUNT, META_INFO, TIMEOUT } from '@/configs';
+import { MAX_MESSAGE_COUNT, META_INFO } from '@/configs';
 import {
   getPosition, inject, isAtBottom, openMessage, scrollToPosition,
 } from '@/composables';
@@ -149,19 +149,7 @@ const onGetChannelResp = (resp: GetChannelResp): void => {
 };
 
 const getChannel = (): void => {
-  socket.timeout(TIMEOUT).emit(
-    'channel:get',
-    {
-      id: channelId,
-    } as GetChannelReq,
-    (err: Error, resp: GetChannelResp): void => {
-      if (err) {
-        openMessage('error', '请求超时');
-      } else {
-        onGetChannelResp(resp);
-      }
-    },
-  );
+  socket.emit('channel:get', { id: channelId } as GetChannelReq, onGetChannelResp);
 };
 
 // #endregion
@@ -192,21 +180,14 @@ const getLastMessageId = (): string | undefined =>
 
 const getHistoryMessages = (): void => {
   channelPage.loading = true;
-  socket.timeout(TIMEOUT).emit(
+  socket.emit(
     'messages:get:history',
     {
       channelId,
       maxMessageCount: MAX_MESSAGE_COUNT,
       lastMessageId: getLastMessageId(),
     } as GetHistoryMessagesReq,
-    (err: Error, resp: GetHistoryMessagesResp): void => {
-      channelPage.loading = false;
-      if (err) {
-        openMessage('error', '请求超时');
-      } else {
-        onGetHistoryMessagesResp(resp);
-      }
-    },
+    onGetHistoryMessagesResp,
   );
 };
 
@@ -254,12 +235,12 @@ const openMessageAddDrawer = (): void => {
 // #endregion
 
 const reload = (): void => {
-  joinChannel();
   getChannel();
   channelPage.messages.length = 0;
   getHistoryMessages();
 };
 
+joinChannel();
 reload();
 
 onBeforeUnmount((): void => {

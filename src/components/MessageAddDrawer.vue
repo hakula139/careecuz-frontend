@@ -65,6 +65,7 @@ const { useForm } = Form;
 
 const props = defineProps<{
   channelId: string;
+  threadId?: string;
   messageIdMap?: Map<string, number>;
 }>();
 
@@ -119,7 +120,6 @@ const toggleMessageAddDrawerHeight = (): void => {
 
 const onAddMessageResp = (resp: AddMessageResp): void => {
   messageAddDrawer.visible = false;
-  messageAddDrawer.loading = false;
   if (resp.code === 200) {
     console.log('message id:', resp.id);
     resetFields();
@@ -137,6 +137,7 @@ const addMessage = (): void => {
     'message:add',
     {
       channelId: props.channelId,
+      threadId: props.threadId,
       data: messageAddDrawer.data,
     } as AddMessageReq,
     (err: Error, resp: AddMessageResp): void => {

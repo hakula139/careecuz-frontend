@@ -87,7 +87,6 @@ const closeChannelAddDrawer = (): void => {
 
 const onAddChannelResp = (resp: AddChannelResp): void => {
   channelAddDrawer.visible = false;
-  channelAddDrawer.loading = false;
   if (resp.code === 200 && resp.id !== undefined) {
     console.log('channel id:', resp.id);
     router.push({

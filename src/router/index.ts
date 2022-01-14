@@ -7,6 +7,7 @@ const RootLayout = () => import(/* webpackChunkName: "root-layout" */ '@/views/R
 const ChannelPage = () => import(/* webpackChunkName: "channel-page" */ '@/views/ChannelPage.vue');
 const ChannelList = () => import(/* webpackChunkName: "channel-list" */ '@/views/ChannelList.vue');
 const MessageReplyPage = () => import(/* webpackChunkName: "message-reply-page" */ '@/views/MessageReplyPage.vue');
+const NotificationList = () => import(/* webpackChunkName: "notification-list" */ '@/views/NotificationList.vue');
 const UserPage = () => import(/* webpackChunkName: "user-page" */ '@/views/UserPage.vue');
 const UserLoginPage = () => import(/* webpackChunkName: "user-login-page" */ '@/views/UserLoginPage.vue');
 
@@ -35,6 +36,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'channels',
         name: 'ChannelList',
         component: ChannelList,
+      },
+      {
+        path: 'notifications',
+        name: 'NotificationList',
+        component: NotificationList,
       },
       {
         path: 'user/:userId',

@@ -68,7 +68,7 @@ import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { ColumnsType } from 'ant-design-vue/es/table';
 
-import { META_INFO, TIMEOUT } from '@/configs';
+import { META_INFO } from '@/configs';
 import { getRelativeTime, inject, openMessage } from '@/composables';
 import { ChannelAddDrawerExposed, ChannelSummary, GetChannelsResp } from '@/types';
 
@@ -125,14 +125,7 @@ const onGetChannelsResp = (resp: GetChannelsResp): void => {
 
 const getChannels = (): void => {
   channels.loading = true;
-  socket.timeout(TIMEOUT).emit('channels:get', (err: Error, resp: GetChannelsResp): void => {
-    channels.loading = false;
-    if (err) {
-      openMessage('error', '请求超时');
-    } else {
-      onGetChannelsResp(resp);
-    }
-  });
+  socket.emit('channels:get', onGetChannelsResp);
 };
 
 const customRow = (record: ChannelSummary) => ({

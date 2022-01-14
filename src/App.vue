@@ -5,19 +5,22 @@
 <script lang="ts" setup>
 // #region imports
 
+import { onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 
 import { TIMEOUT } from '@/configs';
-import { inject, openMessage } from '@/composables';
+import { getUsername, inject, openMessage } from '@/composables';
 import { useStore } from '@/store';
-import { PushUserInfo, Resp } from '@/types';
+import { PushNewNotification, PushUserInfo, Resp } from '@/types';
 
 const router = useRouter();
 const store = useStore();
 const socket = inject<Socket>('socket');
 
 // #endregion
+
+// #region initialize socket
 
 const pushUserInfo = (): void => {
   if (store.getters.isLoggedIn) {
@@ -45,4 +48,32 @@ const pushUserInfo = (): void => {
 };
 
 socket.on('connect', pushUserInfo);
+
+// #endregion
+
+// #region notification
+
+const popNotification = (resp: PushNewNotification): void => {
+  console.log('new notification:', resp.data);
+  const {
+    fromUserId, channelId, threadId, messageId,
+  } = resp.data;
+  openMessage('info', `收到来自 ${getUsername(fromUserId)} 的回复，点击查看详情`, 5, messageId, () => {
+    router.push({
+      name: 'MessageReplyPage',
+      params: {
+        channelId,
+        messageId: threadId,
+      },
+    });
+  });
+};
+
+socket.on('notification:new:summary', popNotification);
+
+onUnmounted(() => {
+  socket.off('connect', pushUserInfo);
+  socket.off('notification:new:summary', popNotification);
+});
+// #endregion
 </script>

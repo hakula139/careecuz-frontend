@@ -8,10 +8,11 @@ export interface GetHistoryMessagesReq {
 
 export interface GetMessageReq {
   channelId: string;
-  messageId: string;
+  threadId: string;
 }
 
 export interface AddMessageReq {
   channelId: string;
+  threadId?: string;
   data: MessageForm;
 }
