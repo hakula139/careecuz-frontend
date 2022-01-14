@@ -116,7 +116,7 @@ const messageIdMap = ref(new Map<string, number>([]));
 
 const spreadMessageReplies = (replies: Message[]): Message[] =>
   replies.reduce((result, reply) => {
-    result.push(Object.assign(reply, { replies: [] }), ...spreadMessageReplies(reply.replies));
+    result.push(...spreadMessageReplies(reply.replies), Object.assign(reply, { replies: [] }));
     return result;
   }, [] as Message[]);
 
@@ -162,7 +162,7 @@ const onPushNewMessage = (resp: PushNewMessage): void => {
   const { id, replyTo } = resp.data;
   if (replyTo && messageIdMap.value.get(replyTo) !== undefined) {
     replyDrawer.data.replies.push(resp.data);
-    messageIdMap.value.set(id, messageIdMap.value.size + 1);
+    messageIdMap.value.set(id, messageIdMap.value.size);
     nextTick((): void => {
       listScrollToBottom();
     });
