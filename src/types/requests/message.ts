@@ -1,19 +1,18 @@
-import { GetChannelReq } from './channel';
 import { MessageForm } from '../message';
 
-export interface GetHistoryMessagesReq extends GetChannelReq {
-  lastMessageId?: number;
+export interface GetHistoryMessagesReq {
+  channelId: string;
+  lastMessageId?: string;
   maxMessageCount?: number;
 }
 
 export interface GetMessageReq {
-  channelId: number;
-  messageId: number;
+  channelId: string;
+  threadId: string;
 }
 
 export interface AddMessageReq {
-  userId: string;
-  userToken: string;
-  channelId: number;
+  channelId: string;
+  threadId?: string;
   data: MessageForm;
 }

@@ -5,6 +5,7 @@ export interface UserForm {
 }
 
 export interface User {
-  userId: string;
+  id: string;
   isBlocked: boolean;
+  isRemoved: boolean;
 }

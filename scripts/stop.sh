@@ -9,4 +9,4 @@ nvm use 16
 # Stop the server using pm2
 
 export PATH="$(yarn global bin):$PATH"
-pm2 stop server
+pm2 stop careecuz-frontend

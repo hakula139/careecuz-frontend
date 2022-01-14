@@ -1,21 +1,21 @@
 import { mock } from 'mockjs';
 
 import {
-  AddMessageResp, GetHistoryMessagesResp, GetMessageResp, PushNewMessage,
+  AddMessageResp, GetHistoryMessagesResp, GetMessageResp, PushNewMessageSummary,
 } from '@/types';
 import { mockDatetimeTemplate } from './datetime';
 import { mockRespTemplate } from './response';
 import { mockUserTemplate } from './user';
 
 const mockMessageBaseTemplate = {
-  'id': '@increment',
+  'id': '@guid',
   'user': mockUserTemplate,
   'content': '@cparagraph',
   'time|1': mockDatetimeTemplate,
-  'replyTo|1': [0, '@integer(1, 10)'],
+  'replyTo|1': [undefined, '@guid'],
 };
 
-export const mockMessagListItemTemplate = {
+export const mockMessageListItemTemplate = {
   ...mockMessageBaseTemplate,
   'replyCount|1': [0, '@integer(1, 100)'],
   'lastReplyTime|1': mockDatetimeTemplate,
@@ -34,12 +34,12 @@ export const mockMessageTemplate = {
 export const getMockGetHistoryMessagesResp = (): GetHistoryMessagesResp =>
   mock({
     ...mockRespTemplate,
-    'data|20': [mockMessagListItemTemplate],
+    'data|20': [mockMessageListItemTemplate],
   });
 
-export const getMockPushNewMessage = (): PushNewMessage =>
+export const getMockPushNewMessageSummary = (): PushNewMessageSummary =>
   mock({
-    data: mockMessagListItemTemplate,
+    data: mockMessageListItemTemplate,
   });
 
 export const getMockGetMessageResp = (): GetMessageResp =>
@@ -50,5 +50,5 @@ export const getMockGetMessageResp = (): GetMessageResp =>
 
 export const mockAddMessageResp: AddMessageResp = mock({
   ...mockRespTemplate,
-  id: '@integer(1, 1000)',
+  id: '@guid',
 });

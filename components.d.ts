@@ -14,6 +14,7 @@ declare module 'vue' {
     AForm: typeof import('ant-design-vue/es')['Form'];
     AFormItem: typeof import('ant-design-vue/es')['FormItem'];
     AInput: typeof import('ant-design-vue/es')['Input'];
+    AInputPassword: typeof import('ant-design-vue/es')['InputPassword'];
     ALayout: typeof import('ant-design-vue/es')['Layout'];
     ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent'];
     ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter'];
@@ -37,13 +38,16 @@ declare module 'vue' {
     KeyOutlined: typeof import('@ant-design/icons-vue')['KeyOutlined'];
     LockOutlined: typeof import('@ant-design/icons-vue')['LockOutlined'];
     MailOutlined: typeof import('@ant-design/icons-vue')['MailOutlined'];
+    MarkdownText: typeof import('./src/components/MarkdownText.vue')['default'];
     MessageAddDrawer: typeof import('./src/components/MessageAddDrawer.vue')['default'];
     MessageItem: typeof import('./src/components/MessageItem.vue')['default'];
     MessageListItem: typeof import('./src/components/MessageListItem.vue')['default'];
     MessageOutlined: typeof import('@ant-design/icons-vue')['MessageOutlined'];
+    NotificationListItem: typeof import('./src/components/NotificationListItem.vue')['default'];
     PageFooter: typeof import('./src/components/PageFooter.vue')['default'];
     PageHeader: typeof import('./src/components/PageHeader.vue')['default'];
     PlusOutlined: typeof import('@ant-design/icons-vue')['PlusOutlined'];
+    ReloadOutlined: typeof import('@ant-design/icons-vue')['ReloadOutlined'];
     ShrinkOutlined: typeof import('@ant-design/icons-vue')['ShrinkOutlined'];
     UpSquareOutlined: typeof import('@ant-design/icons-vue')['UpSquareOutlined'];
     UserOutlined: typeof import('@ant-design/icons-vue')['UserOutlined'];

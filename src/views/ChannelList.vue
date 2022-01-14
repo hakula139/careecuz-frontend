@@ -68,10 +68,9 @@ import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io-client';
 import { ColumnsType } from 'ant-design-vue/es/table';
 
-import { META_INFO, TIMEOUT } from '@/configs';
+import { META_INFO } from '@/configs';
 import { getRelativeTime, inject, openMessage } from '@/composables';
 import { ChannelAddDrawerExposed, ChannelSummary, GetChannelsResp } from '@/types';
-import { mockGetChannelsResp } from '@/api/mock';
 
 const router = useRouter();
 const socket = inject<Socket>('socket');
@@ -115,25 +114,18 @@ const compareChannels = (a: ChannelSummary, b: ChannelSummary): number => {
 
 const onGetChannelsResp = (resp: GetChannelsResp): void => {
   channels.loading = false;
-  if (resp.code === 200) {
+  if (resp.code === 200 && resp.data !== undefined) {
     console.log('channels:', resp.data);
-    channels.data = resp.data.sort(compareChannels);
+    channels.data = resp.data.sort(compareChannels) || [];
   } else {
     console.log('failed to get channels:', resp.message);
     openMessage('error', '加载失败');
   }
 };
 
-socket.on('getChannelsResp', onGetChannelsResp);
-
 const getChannels = (): void => {
   channels.loading = true;
-  socket.timeout(TIMEOUT).emit('getChannelsReq', (err: Error): void => {
-    channels.loading = false;
-    if (err) openMessage('error', '请求超时');
-    // FIXME: remove mock data
-    onGetChannelsResp(mockGetChannelsResp);
-  });
+  socket.emit('channels:get', onGetChannelsResp);
 };
 
 const customRow = (record: ChannelSummary) => ({

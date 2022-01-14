@@ -1,5 +1,5 @@
 {
-  "name": "vue-ts-app-template",
+  "name": "careecuz-frontend",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -9,11 +9,14 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
-    "ant-design-vue": "^3.0.0-alpha.16",
+    "@types/markdown-it": "^12.2.3",
+    "ant-design-vue": "^3.0.0-beta.6",
     "compression": "^1.7.4",
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "github-markdown-css": "^5.1.0",
+    "markdown-it": "^12.3.2",
     "mockjs": "^1.1.0",
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^4.4.0",

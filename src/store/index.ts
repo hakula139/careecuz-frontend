@@ -2,7 +2,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store, useStore as baseUseStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 
-import { State, UserLoginResp } from '@/types';
+import { State, UserAuthResp } from '@/types';
 
 export const key: InjectionKey<Store<State>> = Symbol('store');
 
@@ -12,11 +12,11 @@ export const store: Store<State> = createStore<State>({
   state: {
     status: '',
     userId: '',
-    userToken: '',
+    token: '',
   },
 
   getters: {
-    isLoggedIn: (state): boolean => Boolean(state.userToken),
+    isLoggedIn: (state): boolean => Boolean(state.token),
   },
 
   mutations: {
@@ -24,16 +24,16 @@ export const store: Store<State> = createStore<State>({
       state.status = 'loading';
     },
 
-    authSuccess: (state, resp: UserLoginResp): void => {
+    authSuccess: (state, { userId, token }: UserAuthResp): void => {
       state.status = 'success';
-      state.userId = resp.id;
-      state.userToken = resp.token;
+      state.userId = userId || '';
+      state.token = token || '';
     },
 
     authReset: (state) => {
       state.status = '';
       state.userId = '';
-      state.userToken = '';
+      state.token = '';
     },
   },
 });

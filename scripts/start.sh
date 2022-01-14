@@ -9,5 +9,5 @@ nvm use 16
 # Start the server in production mode using pm2
 
 export PATH="$(yarn global bin):$PATH"
-pm2 start server.mjs --watch
+pm2 start server.mjs --name careecuz-frontend --watch
 pm2 save

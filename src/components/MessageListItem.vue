@@ -25,11 +25,11 @@
     </template>
     <template #content>
       <div @click="openReplyPage">
-        <p>{{ data.content }}</p>
+        <markdown-text :text="data.content" />
       </div>
     </template>
     <template #datetime>
-      <a-tooltip :title="data.time">
+      <a-tooltip :title="getAbsoluteTime(data.time)">
         <span>{{ getRelativeTime(data.time) }}</span>
       </a-tooltip>
     </template>
@@ -39,10 +39,9 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { getRelativeTime, getUsername } from '@/composables';
+import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { MessageSummary } from '@/types';
 
 const router = useRouter();
@@ -50,13 +49,13 @@ const router = useRouter();
 // #endregion
 
 const props = defineProps<{
-  channelId: number;
+  channelId: string;
   data: MessageSummary;
 }>();
 
 // #region message list item
 
-const username = computed(() => getUsername(props.data.user.userId));
+const username = getUsername(props.data.user.id);
 
 const openReplyPage = (): void => {
   router.push({

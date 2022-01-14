@@ -3,9 +3,9 @@
     <template #author>
       <a-space>
         <span>{{ username }}</span>
-        <span>#{{ data.id }}</span>
-        <caret-right-outlined v-if="data.replyTo" />
-        <span v-if="data.replyTo">#{{ data.replyTo }}</span>
+        <span>#{{ messageIdMap?.get(data.id) || 0 }}</span>
+        <caret-right-outlined v-if="parsedReplyTo" />
+        <span v-if="parsedReplyTo">#{{ parsedReplyTo }}</span>
       </a-space>
     </template>
     <template #avatar>
@@ -15,11 +15,11 @@
     </template>
     <template #content>
       <div @click="onMessageClick">
-        <p>{{ data.content }}</p>
+        <markdown-text :text="data.content" />
       </div>
     </template>
     <template #datetime>
-      <a-tooltip :title="data.time">
+      <a-tooltip :title="getAbsoluteTime(data.time)">
         <span>{{ getRelativeTime(data.time) }}</span>
       </a-tooltip>
     </template>
@@ -29,24 +29,25 @@
 <script setup lang="ts">
 // #region imports
 
-import { computed } from 'vue';
-
-import { getRelativeTime, getUsername } from '@/composables';
+import { getAbsoluteTime, getRelativeTime, getUsername } from '@/composables';
 import { Message } from '@/types';
 
 // #endregion
 
 const props = defineProps<{
   data: Message;
+  messageIdMap?: Map<string, number>;
 }>();
 
 const emit = defineEmits<{
-  (event: 'addMessage', replyTo: number): void;
+  (event: 'addMessage', replyTo: string): void;
 }>();
 
 // #region message item
 
-const username = computed(() => getUsername(props.data.user.userId));
+const username = getUsername(props.data.user.id);
+
+const parsedReplyTo = props.data.replyTo ? props.messageIdMap?.get(props.data.replyTo) : undefined;
 
 const onMessageClick = (): void => {
   emit('addMessage', props.data.id);

@@ -1,6 +1,9 @@
 <template>
   <a-layout-header class="sticky top-0 z-50 flex items-center justify-between px-4">
-    <a-button type="text">
+    <a-button
+      type="text"
+      @click="$router.push({ name: 'NotificationList' })"
+    >
       <template #icon>
         <bell-outlined class="text-header" />
       </template>
