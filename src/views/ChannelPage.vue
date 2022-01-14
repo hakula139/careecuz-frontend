@@ -235,12 +235,12 @@ const openMessageAddDrawer = (): void => {
 // #endregion
 
 const reload = (): void => {
-  joinChannel();
   getChannel();
   channelPage.messages.length = 0;
   getHistoryMessages();
 };
 
+joinChannel();
 reload();
 
 onBeforeUnmount((): void => {
