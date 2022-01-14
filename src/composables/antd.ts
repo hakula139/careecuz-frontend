@@ -5,10 +5,14 @@ import { NoticeType } from '@/types';
 
 message.config({
   top: '88px',
-  duration: 2,
-  maxCount: 3,
+  maxCount: 1,
 });
 
-export const openMessage = (type: NoticeType, content: string): void => {
-  message[type](content);
+export const openMessage = (type: NoticeType, content: string, duration = 2, onClick = () => {}): void => {
+  message.open({
+    type,
+    content,
+    duration,
+    onClick,
+  });
 };

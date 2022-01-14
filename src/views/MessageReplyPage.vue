@@ -173,6 +173,7 @@ const getMessage = (): void => {
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
   replyDrawer.data.replies.push(resp.data);
+  messageIdMap.value.set(resp.data.id, messageIdMap.value.size + 1);
   nextTick((): void => {
     listScrollToBottom();
   });

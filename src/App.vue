@@ -55,7 +55,9 @@ socket.on('connect', pushUserInfo);
 const popNotification = (resp: PushNewNotification): void => {
   console.log('new notification:', resp.data);
   const { user } = resp.data.message;
-  openMessage('info', `收到来自 ${getUsername(user.id)} 的回复`);
+  openMessage('info', `收到来自 ${getUsername(user.id)} 的回复，点击查看详情`, 5, () => {
+    router.push({ name: 'NotificationList' });
+  });
 };
 
 socket.on('notification:new', popNotification);
