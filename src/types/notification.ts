@@ -1,5 +1,5 @@
-import { MessageBase } from './message';
-
 export interface Notification {
-  message: MessageBase;
+  fromUserId: string;
+  threadId: string;
+  messageId: string;
 }

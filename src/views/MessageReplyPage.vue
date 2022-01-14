@@ -42,6 +42,7 @@
   <message-add-drawer
     ref="messageAddDrawerRef"
     :channel-id="channelId"
+    :thread-id="threadId"
     :message-id-map="messageIdMap"
     @done="listScrollToBottom"
   />
@@ -80,7 +81,7 @@ const listScrollToBottom = (): void => {
 // #region reply drawer
 
 const channelId = route.params.channelId as string;
-const messageId = route.params.messageId as string;
+const threadId = route.params.messageId as string;
 
 const replyDrawer = reactive({
   visible: false,
@@ -114,12 +115,6 @@ const closeReplyDrawer = (): void => {
 
 const messageIdMap = ref(new Map<string, number>([]));
 
-const spreadMessageReplies = (replies: Message[]): Message[] =>
-  replies.reduce((result, reply) => {
-    result.push(...spreadMessageReplies(reply.replies), Object.assign(reply, { replies: [] }));
-    return result;
-  }, [] as Message[]);
-
 // Provide human-friendly message ids.
 const getMessageIdMap = ({ id, replies }: Message): void => {
   messageIdMap.value.set(id, 0);
@@ -133,9 +128,8 @@ const onGetMessageResp = (resp: GetMessageResp): void => {
   if (resp.code === 200 && resp.data) {
     console.log('message:', resp.data);
     Object.assign(replyDrawer.data, resp.data, {
-      replies: spreadMessageReplies(resp.data.replies).sort(compareMessages),
+      replies: resp.data.replies.sort(compareMessages),
     });
-    console.log('parsed message:', replyDrawer.data);
     getMessageIdMap(replyDrawer.data);
   } else if (resp.code === 404) {
     openMessage('error', '消息不存在');
@@ -150,7 +144,7 @@ const onGetMessageResp = (resp: GetMessageResp): void => {
 
 const getMessage = (): void => {
   replyDrawer.loading = true;
-  socket.emit('message:get', { channelId, messageId } as GetMessageReq, onGetMessageResp);
+  socket.emit('message:get', { channelId, threadId } as GetMessageReq, onGetMessageResp);
 };
 
 // #endregion
@@ -159,8 +153,8 @@ const getMessage = (): void => {
 
 const onPushNewMessage = (resp: PushNewMessage): void => {
   console.log('new message:', resp.data);
-  const { id, replyTo } = resp.data;
-  if (replyTo && messageIdMap.value.get(replyTo) !== undefined) {
+  const { id, threadId: respThreadId } = resp.data;
+  if (threadId === respThreadId) {
     replyDrawer.data.replies.push(resp.data);
     messageIdMap.value.set(id, messageIdMap.value.size);
     nextTick((): void => {

@@ -17,5 +17,6 @@ export interface MessageSummary extends MessageBase {
 }
 
 export interface Message extends MessageBase {
+  threadId: string;
   replies: Message[];
 }

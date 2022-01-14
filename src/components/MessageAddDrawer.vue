@@ -65,6 +65,7 @@ const { useForm } = Form;
 
 const props = defineProps<{
   channelId: string;
+  threadId?: string;
   messageIdMap?: Map<string, number>;
 }>();
 
@@ -136,6 +137,7 @@ const addMessage = (): void => {
     'message:add',
     {
       channelId: props.channelId,
+      threadId: props.threadId,
       data: messageAddDrawer.data,
     } as AddMessageReq,
     (err: Error, resp: AddMessageResp): void => {
