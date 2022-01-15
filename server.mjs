@@ -7,7 +7,7 @@ import path from 'path';
 
 const app = express();
 const distPath = path.resolve('dist');
-const listenPort = 7000;
+const listenPort = 7070;
 
 app
   .use(compression())
