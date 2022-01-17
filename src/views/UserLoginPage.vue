@@ -11,6 +11,7 @@
       <a-form-item>
         <a-input
           v-model:value="userForm.data.email"
+          autocomplete="username"
           placeholder="邮箱地址"
           size="large"
           allow-clear
@@ -34,6 +35,7 @@
       <a-form-item>
         <a-input-password
           v-model:value="userForm.data.password"
+          autocomplete="password"
           type="password"
           placeholder="密码"
           size="large"
@@ -114,9 +116,8 @@ import { META_INFO, SEND_VERIFY_CODE_INTERVAL, TIMEOUT } from '@/configs';
 import { Countdown, inject, openMessage } from '@/composables';
 import { useStore } from '@/store';
 import {
-  Resp, UserForm, UserAuthReq, UserAuthResp,
+  Resp, UserForm, UserAuthReq, UserAuthResp, SendVerifyCodeReq,
 } from '@/types';
-import { mockSendVerifyCodeResp } from '@/api/mock';
 
 const router = useRouter();
 const store = useStore();
@@ -147,6 +148,8 @@ const userForm = reactive({
     verifyCode: undefined,
   } as UserForm,
 });
+
+const getEmail = (): string => userForm.data.email + emailDomain.selected;
 
 const validateEmail = async (_rule: RuleObject, value: string): Promise<void> => {
   if (!value || !value.trim()) {
@@ -202,11 +205,11 @@ const onUserLoginResp = (resp: UserAuthResp): void => {
     console.log('user logged in:', resp.userId);
     router.push({ name: 'ChannelList' });
   } else if (resp.code === 100) {
-    console.log('user not registered:', userForm.data.email);
+    console.log('user not registered:', getEmail());
     userForm.isRegisterMode = true;
   } else {
     store.commit('authReset');
-    console.log('failed to log in:', userForm.data.email, resp.message);
+    console.log('failed to log in:', getEmail(), resp.message);
     openMessage('error', `登录失败: ${resp.message}`);
   }
 };
@@ -219,20 +222,20 @@ const onUserRegisterResp = (resp: UserAuthResp): void => {
     router.push({ name: 'ChannelList' });
   } else {
     store.commit('authReset');
-    console.log('failed to register:', userForm.data.email, resp.message);
+    console.log('failed to register:', getEmail(), resp.message);
     openMessage('error', `注册失败: ${resp.message}`);
   }
 };
 
-const parseFormData = ({ email, password, verifyCode }: UserForm): UserForm => ({
-  email: email + emailDomain.selected,
+const parseFormData = ({ password, verifyCode }: UserForm): UserForm => ({
+  email: getEmail(),
   password,
   verifyCode,
 });
 
 const login = (): void => {
   userForm.loading = true;
-  console.log('login:', userForm.data.email);
+  console.log('login:', getEmail());
   store.commit('authLoading');
   socket.emit(
     userForm.isRegisterMode ? 'user:register' : 'user:login',
@@ -270,20 +273,26 @@ const onSendVerifyCodeResp = (resp: Resp): void => {
   if (resp.code === 200) {
     countdown.value.start();
   } else {
-    console.log('failed to send verify code:', userForm.data.email, resp.message);
+    console.log('failed to send verify code:', getEmail(), resp.message);
     openMessage('error', `发送验证码失败: ${resp.message}`);
   }
 };
 
-socket.on('sendVerifyCodeResp', onSendVerifyCodeResp);
-
 const sendVerifyCode = (): void => {
-  console.log('send verify code:', userForm.data.email);
-  socket.timeout(TIMEOUT).emit('sendVerifyCodeReq', (err: Error): void => {
-    if (err) openMessage('error', '请求超时');
-    // FIXME: remove mock data
-    onSendVerifyCodeResp(mockSendVerifyCodeResp);
-  });
+  console.log('send verify code:', getEmail());
+  socket.timeout(TIMEOUT).emit(
+    'user:verify-code:send',
+    {
+      email: getEmail(),
+    } as SendVerifyCodeReq,
+    (err: Error, resp: Resp): void => {
+      if (err) {
+        openMessage('error', '请求超时');
+      } else {
+        onSendVerifyCodeResp(resp);
+      }
+    },
+  );
 };
 
 // #endregion
