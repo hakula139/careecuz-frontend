@@ -1,6 +1,15 @@
+<!-- markdownlint-disable MD033 -->
+
 # CareeCuz Frontend
 
 一个匿名的校招求职交流平台。前端基于 Vue 3，使用 TypeScript 编写。
+
+<div align="middle">
+  <img width="320" src="./assets/screenshot_1.png" alt="屏幕截图 1">
+  <img width="320" src="./assets/screenshot_2.png" alt="屏幕截图 2">
+  <img width="320" src="./assets/screenshot_3.png" alt="屏幕截图 3">
+  <img width="320" src="./assets/screenshot_4.png" alt="屏幕截图 4">
+</div>
 
 ## 目录
 
